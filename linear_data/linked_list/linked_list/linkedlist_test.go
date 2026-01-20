@@ -149,3 +149,58 @@ func TestDeleteONotFound(t *testing.T) {
 		t.Errorf("expected ErrNotFound, got %v", err)
 	}
 }
+
+func TestDeleteAllO(t *testing.T) {
+	var ll LinkedList[int]
+	_ = ll.Insert(2)
+	_ = ll.Insert(2)
+	_ = ll.Insert(3)
+	if res := ll.DeleteAllO(2); res != 2 {
+		t.Errorf("res expected: 2, res value: %v, list: %v", res, ll.String())
+	}
+	if ll.size != 1 {
+		t.Errorf("size expected: 1, size value: %v, list: %v", ll.size, ll.String())
+	}
+	if ll.head.Data != ll.tail.Data {
+		t.Errorf("expected head: %v and tail: %v to be the same. List: %v", ll.head.Data, ll.tail.Data, ll.String())
+	}
+	_ = ll.Insert(5)
+	_ = ll.Insert(5)
+	_ = ll.Insert(5)
+	if res := ll.DeleteAllO(5); res != 3 {
+		t.Errorf("res expected: 3, res value: %v, list: %v", res, ll)
+	}
+	_ = ll.Insert(3)
+	if ll.tail.Data != 3 {
+		t.Errorf("expected: 3, res value: %v, list: %v", ll.tail.Data, ll.String())
+	}
+}
+
+func TestSet(t *testing.T) {
+	var ll LinkedList[int]
+	_ = ll.Insert(1)
+	_ = ll.Insert(2)
+	_ = ll.Insert(3)
+	if err := ll.Set(0, 6); err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	if err := ll.Set(1, 6); err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if err := ll.Set(2, 6); err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	v, _ := ll.GetI(0)
+	if v != 6 {
+		t.Errorf("expected value 6 at index 0 after set, got %v", v)
+	}
+	v, _ = ll.GetI(1)
+	if v != 6 {
+		t.Errorf("expected value 6 at index 1 after set, got %v", v)
+	}
+	v, _ = ll.GetI(2)
+	if v != 6 {
+		t.Errorf("expected value 6 at index 2 after set, got %v", v)
+	}
+}

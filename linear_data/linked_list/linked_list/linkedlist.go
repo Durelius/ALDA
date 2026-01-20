@@ -4,7 +4,7 @@ package linkedlist
 import (
 	"errors"
 	"fmt"
-	"reflect"
+	"log"
 	"strings"
 )
 
@@ -32,10 +32,6 @@ func (ll *LinkedList[T]) Insert(data T) error {
 		ll.tail = node
 		ll.size = 1
 		return nil
-	}
-
-	if reflect.TypeOf(ll.head.Data) != reflect.TypeOf(data) {
-		return errors.New("not same type in linked list")
 	}
 
 	ll.tail.Next = &node[T]{Data: data}
@@ -112,6 +108,7 @@ func (ll *LinkedList[T]) DeleteI(index int) error {
 	return nil
 }
 
+// DeleteO Deletes the first instance of T in the list
 func (ll *LinkedList[T]) DeleteO(obj T) error {
 	if ll.head == nil {
 		return ErrNotFound
@@ -145,7 +142,66 @@ func (ll *LinkedList[T]) DeleteO(obj T) error {
 	return ErrNotFound
 }
 
-func (ll *LinkedList[T]) String() string {
+// DeleteAllO Deletes all instances of obj in the list and returns the number of deletions
+func (ll *LinkedList[T]) DeleteAllO(obj T) int {
+	if ll.head == nil {
+		return 0
+	}
+	deletions := 0
+	// Case 1: deleting head
+	prev := ll.head
+	for prev.Data == obj {
+		prev = prev.Next
+		ll.head = prev
+		if ll.head == nil {
+			ll.tail = nil
+		}
+		deletions++
+	}
+	if ll.size-deletions == 1 {
+		ll.tail = ll.head
+	}
+
+	// Case 2: deleting non-head
+	for prev.Next != nil {
+		log.Println(prev.Data)
+		log.Println(prev.Next.Data)
+		if prev.Next.Data == obj {
+			// deleting tail
+			if prev.Next.Next == nil {
+				prev.Next = nil
+				ll.tail = prev
+				deletions++
+				break
+			}
+			prev.Next = prev.Next.Next
+			deletions++
+		}
+		prev = prev.Next
+	}
+	ll.size -= deletions
+	return deletions
+}
+
+func (ll *LinkedList[T]) Set(index int, obj T) error {
+	if index >= ll.size {
+		return ErrOutOfBounds
+	}
+
+	node := ll.head
+	if index == 0 {
+		node.Data = obj
+		return nil
+	}
+	for i := 1; i <= index; i++ {
+		node = node.Next
+	}
+	node.Data = obj
+
+	return nil
+}
+
+func (ll LinkedList[T]) String() string {
 	var b strings.Builder
 	b.WriteString("[")
 	for cur := ll.head; cur != nil; cur = cur.Next {
