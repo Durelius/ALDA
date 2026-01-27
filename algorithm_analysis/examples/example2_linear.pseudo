@@ -1,0 +1,9 @@
+func SanitizeString(string text) {
+	StringBuilder newText = new StringBuilder()
+	for i := 0; i < text.length(); i++ {
+		if text[i] != "$" {
+      newText.write(text[i])
+		}
+	}
+	return newText.string()
+}

@@ -1,0 +1,13 @@
+func CountEvenNumbers(List param) {
+  int evenCount = 0
+  int n = param.size()
+    if n % 2 == 0 {
+        n = n * n
+    }
+    for i := 0; i < n; i++ {
+        if i % 2 == 0 {
+            evenCount++
+          }
+    }
+    return evenCount;
+}
