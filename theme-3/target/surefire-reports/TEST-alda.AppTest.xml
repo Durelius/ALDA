@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="alda.AppTest" time="0.002" tests="6" errors="0" skipped="6" failures="0">
+  <properties/>
+  <testcase name="testRemoveNonExistingElements" classname="alda.AppTest" time="0.0">
+    <skipped message="class alda.AppTest is @Disabled"/>
+  </testcase>
+  <testcase name="testRemoveUntilEmpty" classname="alda.AppTest" time="0.0">
+    <skipped message="class alda.AppTest is @Disabled"/>
+  </testcase>
+  <testcase name="testRemoveExistingElements" classname="alda.AppTest" time="0.0">
+    <skipped message="class alda.AppTest is @Disabled"/>
+  </testcase>
+  <testcase name="testContains" classname="alda.AppTest" time="0.0">
+    <skipped message="class alda.AppTest is @Disabled"/>
+  </testcase>
+  <testcase name="testAddAndSize" classname="alda.AppTest" time="0.0">
+    <skipped message="class alda.AppTest is @Disabled"/>
+  </testcase>
+  <testcase name="testAddRemoveInterleaved" classname="alda.AppTest" time="0.0">
+    <skipped message="class alda.AppTest is @Disabled"/>
+  </testcase>
+</testsuite>

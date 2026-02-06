@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="alda.BinarySearchTreeTest" time="0.031" tests="13" errors="0" skipped="0" failures="1">
+  <properties>
+    <property name="java.specification.version" value="22"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/test-classes:/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/classes:/Users/wilhelmdurelius/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/wilhelmdurelius/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/wilhelmdurelius/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/wilhelmdurelius/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/wilhelmdurelius/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="22"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk-22.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/surefire/surefirebooter-20260206112011936_3.jar /Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/surefire 2026-02-06T11-20-11_903-jvmRun1 surefire-20260206112011936_1tmp surefire_0-20260206112011936_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/test-classes:/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/classes:/Users/wilhelmdurelius/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/wilhelmdurelius/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/wilhelmdurelius/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/wilhelmdurelius/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/wilhelmdurelius/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/wilhelmdurelius"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2024-07-16"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/jdk-22.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3/target/surefire/surefirebooter-20260206112011936_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="22.0.2+9-70"/>
+    <property name="user.name" value="wilhelmdurelius"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="15.5"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="/Users/wilhelmdurelius/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/var/folders/fh/stg_cz457vd0zqm1lrn0d7900000gn/T/"/>
+    <property name="java.version" value="22.0.2"/>
+    <property name="user.dir" value="/Users/wilhelmdurelius/Documents/Inlämningsuppgifter/VT2026/ALDA/theme-3"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/wilhelmdurelius/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="22.0.2+9-70"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="66.0"/>
+  </properties>
+  <testcase name="testRemoveExistingMiddleItemWithEmptyLeftChild" classname="alda.BinarySearchTreeTest" time="0.009"/>
+  <testcase name="testOtherType" classname="alda.BinarySearchTreeTest" time="0.0"/>
+  <testcase name="testDepth" classname="alda.BinarySearchTreeTest" time="0.0"/>
+  <testcase name="testSize" classname="alda.BinarySearchTreeTest" time="0.001"/>
+  <testcase name="testToString" classname="alda.BinarySearchTreeTest" time="0.0"/>
+  <testcase name="testEmptyTree" classname="alda.BinarySearchTreeTest" time="0.001"/>
+  <testcase name="testRemoveRoot" classname="alda.BinarySearchTreeTest" time="0.001">
+    <system-out><![CDATA[toDelete: 5
+]]></system-out>
+  </testcase>
+  <testcase name="testAddDuplicates" classname="alda.BinarySearchTreeTest" time="0.0"/>
+  <testcase name="testAddUnique" classname="alda.BinarySearchTreeTest" time="0.001"/>
+  <testcase name="testRandomAddAndRemove" classname="alda.BinarySearchTreeTest" time="0.006">
+    <failure message="expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at alda.BinarySearchTreeTest.testRandomAddAndRemove(BinarySearchTreeTest.java:127)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+]]></failure>
+    <system-out><![CDATA[Oracle size: 6
+Tree size: 6
+Oracle: [1, 2, 3, 4, 5, 6]
+Tree: [1, 2, 3, 4, 5, 6]
+To remove: 0
+Oracle size: 7
+Tree size: 7
+Oracle: [0, 1, 2, 3, 4, 5, 6]
+Tree: [0, 1, 2, 3, 4, 5, 6]
+To remove: 6
+Oracle size: 7
+Tree size: 7
+Oracle: [0, 1, 2, 3, 4, 5, 7]
+Tree: [0, 1, 2, 3, 4, 5, 7]
+To remove: 8
+Oracle size: 7
+Tree size: 7
+Oracle: [0, 1, 2, 3, 4, 5, 7]
+Tree: [0, 1, 2, 3, 4, 5, 7]
+To remove: 3
+Oracle size: 6
+Tree size: 6
+Oracle: [0, 1, 2, 4, 5, 7]
+Tree: [0, 1, 2, 4, 5, 7]
+To remove: 8
+Oracle size: 6
+Tree size: 6
+Oracle: [0, 1, 2, 4, 5, 7]
+Tree: [0, 1, 2, 4, 5, 7]
+To remove: 6
+Oracle size: 7
+Tree size: 7
+Oracle: [0, 1, 2, 3, 4, 5, 7]
+Tree: [0, 1, 2, 3, 4, 5, 7]
+To remove: 8
+Oracle size: 8
+Tree size: 8
+Oracle: [0, 1, 2, 3, 4, 5, 7, 9]
+Tree: [0, 1, 2, 3, 4, 5, 7, 9]
+To remove: 5
+toDelete: 5
+Oracle size: 8
+Tree size: 8
+Oracle: [0, 1, 2, 3, 4, 5, 7, 9]
+Tree: [0, 1, 2, 3, 4, 5, 7, 9]
+To remove: 9
+Oracle size: 7
+Tree size: 7
+Oracle: [0, 1, 2, 3, 4, 5, 7]
+Tree: [0, 1, 2, 3, 4, 5, 7]
+To remove: 8
+Oracle size: 8
+Tree size: 8
+Oracle: [0, 1, 2, 3, 4, 5, 7, 8]
+Tree: [0, 1, 2, 3, 4, 5, 7, 8]
+To remove: 2
+Oracle size: 8
+Tree size: 8
+Oracle: [0, 1, 3, 4, 5, 6, 7, 8]
+Tree: [0, 1, 3, 4, 5, 6, 7, 8]
+To remove: 7
+toDelete: 7
+Oracle size: 7
+Tree size: 7
+Oracle: [0, 1, 3, 4, 5, 6, 8]
+Tree: [0, 1, 3, 4, 5, 6, 8]
+To remove: 0
+Oracle size: 6
+Tree size: 6
+Oracle: [1, 3, 4, 5, 6, 8]
+Tree: [1, 3, 4, 5, 6, 8]
+To remove: 9
+Oracle size: 7
+Tree size: 7
+Oracle: [1, 2, 3, 4, 5, 6, 8]
+Tree: [1, 2, 3, 4, 5, 6, 8]
+To remove: 2
+Oracle size: 7
+Tree size: 7
+Oracle: [1, 3, 4, 5, 6, 8, 9]
+Tree: [1, 3, 4, 5, 6, 8, 9]
+To remove: 8
+toDelete: 8
+Oracle size: 6
+Tree size: 6
+Oracle: [1, 3, 4, 5, 6, 9]
+Tree: [1, 3, 4, 5, 6, 9]
+To remove: 3
+Oracle size: 5
+Tree size: 5
+Oracle: [1, 4, 5, 6, 9]
+Tree: [1, 4, 5, 6, 9]
+To remove: 1
+Oracle size: 5
+Tree size: 5
+Oracle: [1, 4, 5, 6, 9]
+Tree: [1, 4, 5, 6, 9]
+To remove: 9
+toDelete: 9
+Oracle size: 5
+Tree size: 5
+Oracle: [1, 2, 4, 5, 6]
+Tree: [1, 2, 4, 5, 6]
+To remove: 8
+Oracle size: 6
+Tree size: 6
+Oracle: [0, 1, 2, 4, 5, 6]
+Tree: [0, 1, 2, 4, 5, 6]
+To remove: 4
+toDelete: 4
+Oracle size: 6
+Tree size: 6
+Oracle: [0, 1, 2, 5, 6, 9]
+Tree: [0, 1, 2, 5, 6, 9]
+To remove: 6
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 1, 2, 5, 9]
+Tree: [0, 1, 2, 5, 9]
+To remove: 5
+toDelete: 5
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 1, 2, 8, 9]
+Tree: [0, 1, 2, 8, 9]
+To remove: 2
+Oracle size: 4
+Tree size: 4
+Oracle: [0, 1, 8, 9]
+Tree: [0, 1, 8, 9]
+To remove: 7
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 1, 3, 8, 9]
+Tree: [0, 1, 3, 8, 9]
+To remove: 3
+Oracle size: 4
+Tree size: 4
+Oracle: [0, 1, 8, 9]
+Tree: [0, 1, 8, 9]
+To remove: 4
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 1, 2, 8, 9]
+Tree: [0, 1, 2, 8, 9]
+To remove: 8
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 1, 2, 8, 9]
+Tree: [0, 1, 2, 8, 9]
+To remove: 1
+Oracle size: 4
+Tree size: 4
+Oracle: [0, 2, 8, 9]
+Tree: [0, 2, 8, 9]
+To remove: 8
+Oracle size: 4
+Tree size: 4
+Oracle: [0, 2, 7, 9]
+Tree: [0, 2, 7, 9]
+To remove: 7
+Oracle size: 4
+Tree size: 4
+Oracle: [0, 2, 7, 9]
+Tree: [0, 2, 7, 9]
+To remove: 6
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 2, 3, 7, 9]
+Tree: [0, 2, 3, 7, 9]
+To remove: 8
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 2, 3, 7, 9]
+Tree: [0, 2, 3, 7, 9]
+To remove: 3
+Oracle size: 5
+Tree size: 5
+Oracle: [0, 2, 3, 7, 9]
+Tree: [0, 2, 3, 7, 9]
+To remove: 2
+]]></system-out>
+  </testcase>
+  <testcase name="testRemoveExistingLeaf" classname="alda.BinarySearchTreeTest" time="0.0"/>
+  <testcase name="testRemoveExistingMiddleItemWithTwoChildren" classname="alda.BinarySearchTreeTest" time="0.001"/>
+  <testcase name="testRemoveExistingMiddleItemWithEmptyRightChild" classname="alda.BinarySearchTreeTest" time="0.0"/>
+</testsuite>
