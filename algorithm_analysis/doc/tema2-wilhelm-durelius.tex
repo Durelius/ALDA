@@ -1,0 +1,96 @@
+% The *FIRST* thing you should do is rename the file. While not
+% a strict requirement it is recommended that you rename it 
+% according to the format T[NUMBER]-theme-name.tex, e.g.
+% T1-linear-ds.tex. This makes it easier to spot if you accidently
+% for example upload the wrong file.
+
+% The format (A5) is selected to facilitate reading on small
+% devices and should NOT be changed. 
+\documentclass[a5paper,10pt,oneside]{article}
+\AddToHook{cmd/section/before}{\clearpage}
+% The package babel is loaded set up for Swedish with Swedish 
+% hyphenation,replaces "Contents" with "Innehållsförteckning, 
+% "References" with "Litteraturförteckning", etc.
+\usepackage[swedish]{babel}
+
+\usepackage[T1]{fontenc}
+% The package "inputenc" lets us specify what character encoding
+% has been used to save the .tex file. Make sure you set it up
+% with the right character encoding, otherwise ÅÄÖ might look 
+% wrong, or possibly the document won't compile at all.
+\usepackage[utf8]{inputenc}     % Most likely right nowadays, 
+                                % might even be standard and not necessary
+% \usepackage[latin1]{inputenc} % Possibly right if you use Windows
+% Other alternatives are available, but much less likely to be used
+
+% The packages listed below are optional and can be removed if you
+% don't use them 
+\usepackage{graphicx} 
+\usepackage{cite}
+\usepackage{url}
+\usepackage{ifthen}
+\usepackage{listings}	
+
+% These two lines set up options for the listings package and
+% can be removed if you don't use it, or changed if you, e.g, 
+% use another language than Java. 
+% For more information about the listings package see:
+% ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
+\lstset{language={},tabsize=3, numbers=left,frame=L,floatplacement=hbtp, basicstyle=\ttfamily, columns=fullflexible}
+
+\usepackage{ifpdf}
+\ifpdf
+	\usepackage[hidelinks]{hyperref}
+\else
+	\usepackage{url}
+\fi
+
+
+% Change NR and TITLE below to appropriate values
+\title{Tema 2: Algoritmanalys}
+
+% Write the name and user namn for all participants in the group here.
+% Separate persons with \and
+\author{Wilhelm Durelius \url{widu7139}}
+
+\begin{document}
+
+% Do NOT change the title format in any way, especially not to place it on 
+% a separate page
+\maketitle
+
+% Here the actual report starts. Everything from here to the start of the
+% bibliography should, of course, be removed before you start writing your 
+% own text.
+
+\section{Utskrift}
+Avgör tidskomplexiteten med big $O$ för pseudokoden nedan. I pseudokoden kan vi komma åt tecken från strängar med array-syntax i $O(1)$-tidskomplexitet.
+\lstinputlisting{../examples/example1_constant.pseudo}
+\subsection{Svar}
+I ett worst-case scenario så körs loopen 5 gånger, resten av koden är $O(1)$. Med tanke på att loopen inte ökar i storlek
+när $n$ ($email.length()$) ökar, utan toppar på 5, så har hela metoden en tidskomplexitet på $O(1)$, den är konstant.
+
+
+\section{Utskrift}
+Avgör tidskomplexiteten med big $O$ för pseudokoden nedan. I pseudokoden använder vi StringBuilder för att skriva till strängar i $O(1)$-tidskomplexitet.
+Vi kommer även åt tecken i strängar med array-syntax i $O(1)$.
+\lstinputlisting[language={}, basicstyle=\ttfamily]{../examples/example2_linear.pseudo}
+\subsection{Svar}
+I ett worst-case scenario så körs loopen $N$ gånger ($text.length()$), resten av koden är $O(1)$. Med tanke på att loopen ökar i storlek i takt med storleken på $N$,
+så är tidskomplexiteten på metoden $O(n)$. 
+
+\section{Utskrift}
+Avgör tidskomplexiteten med big $O$ för pseudokoden nedan. Java-versionen av lista.subList(start, end) vi utgår ifrån returnerar i $O(1)$ tidskomplexitet.
+\lstinputlisting{../examples/example3_maillog.pseudo}
+\subsection{Svar}
+I ett worst-case scenario så körs loopen  $log(N)$ gånger ($\frac{N}{2}$ vid varje körning), resten av koden är $O(1)$.
+$N$ behöver alltså dubblas för att loopen ska lägga till ett extra varv, vilket gör metoden till $O(\log n)$.
+
+\section{Utskrift}
+Avgör tidskomplexiteten med big $O$ för pseudokoden nedan. 
+\lstinputlisting{../examples/example4_n2.pseudo}
+\subsection{Svar}
+I ett worst-case scenario så körs loopen $n* n$ gånger, resten av koden är $O(1)$.
+Antalet varv loopen tar i detta fall ökar alltså kvadratiskt i takt med att parametern ökar.
+Därför är metodens tidskomplexitet $O(N^2)$.
+\end{document}

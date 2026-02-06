@@ -4,7 +4,7 @@ func CountEvenNumbers(List param) {
     if n % 2 == 0 {
         n = n * n
     }
-    for i := 0; i < n; i++ {
+    for int i = 0; i < n; i++ {
         if i % 2 == 0 {
             evenCount++
           }

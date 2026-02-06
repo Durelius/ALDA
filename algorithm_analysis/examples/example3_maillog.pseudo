@@ -1,6 +1,8 @@
-func StripMailList(List mailList, int maxSize) {
+int maxSize = 500
+func StripMailList(List mailList) {
 	while mailList.size() > maxSize {
-		mailList = mailList.subList(mailList.size / 2, mailList.size())
+    int mailSize = mailList.size()
+		mailList = mailList.subList(mailSize / 2, mailSize)
 	}
 	return mailList
 }

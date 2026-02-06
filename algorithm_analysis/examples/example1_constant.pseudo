@@ -1,18 +1,13 @@
 func VerifyEmail(string email) {
-  if email.length() < 5 {
+  if email.length() < 5
       throw Exception("Email is too short")
-    }
-
   bool containsDot = false
-    
   for int i = email.length() - 1; i >= email.length() - 5; i-- {
       if email[i] == "." {
           containsDot = true
           break
         }
     }
-
-  if !containsDot {
+  if !containsDot 
       throw Exception("Email does not have a domain")
-    }
 }
