@@ -75,12 +75,6 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
     if (currentSize == array.length - 1)
       enlargeArray(array.length * 2 + 1);
     // Percolate up
-    System.out.println("child amount: " + d);
-    ;
-    System.out.println("tree before insert: ");
-    for (int i = 0; i < array.length; i++) {
-      System.out.println("Index: " + i + " Value: " + array[i]);
-    }
     int hole = ++currentSize;
     array[hole] = x;
     while (hole > 1 && x.compareTo(array[parentIndex(hole)]) < 0) {
@@ -89,23 +83,9 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
       array[parentIndex] = x;
       array[hole] = temp;
       hole = parentIndex;
-      System.out.println("Switched up: " + x + " Swtiched down: " + temp);
-    }
-
-    // for (array[0] = x; hole > 1 && x.compareTo(array[dMath(hole)]) < 0; hole =
-    // dMath(hole))
-    // array[hole] = array[dMath(hole)];
-    // array[hole] = x;
-    System.out.println("tree after insert: ");
-    for (int i = 0; i < array.length; i++) {
-      System.out.println("Index: " + i + " Value: " + array[i]);
     }
   }
 
-  // private int dMath(int hole) {
-  // var res = (hole - 2) / d + 1;
-  // return res;
-  // }
 
   @SuppressWarnings("unchecked")
   private void enlargeArray(int newSize) {
@@ -180,20 +160,27 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
    * @param hole the index at which the percolate begins.
    */
   private void percolateDown(int hole) {
-    int child;
-    AnyType tmp = array[hole];
+    while (firstChildIndex(hole) <= currentSize) {
+      int firstChild = firstChildIndex(hole);
+      int prioChild = firstChild;
+      for (int i = 1; i < d; i++) {
+        int child = firstChild + i;
+        if (child > currentSize)
+          break;
+        if (array[child].compareTo(array[prioChild]) < 0)
+          prioChild = child;
+      }
 
-    for (; hole * d <= currentSize; hole = child) {
-      child = hole * d;
-      if (child != currentSize &&
-          array[child + 1].compareTo(array[child]) < 0)
-        child++;
-      if (array[child].compareTo(tmp) < 0)
-        array[hole] = array[child];
-      else
+      if (array[prioChild].compareTo(array[hole]) >= 0)
         break;
+
+      var temp = array[hole];
+      array[hole] = array[prioChild];
+      array[prioChild] = temp;
+      hole = prioChild;
+
     }
-    array[hole] = tmp;
+
   }
 
   public int size() {
@@ -220,7 +207,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
   // Test program
   public static void main(String[] args) {
     int numItems = 10000;
-    BinaryHeap<Integer> h = new BinaryHeap<>();
+    DHeap<Integer> h = new DHeap<Integer>();
     int i = 37;
 
     for (i = 37; i != 0; i = (i + 37) % numItems)

@@ -143,6 +143,15 @@ public class BinaryHeap<AnyType extends Comparable<? super AnyType>> {
     int child;
     AnyType tmp = array[hole];
 
+    array[hole] = x;
+    while (hole > 1 && x.compareTo(array[parentIndex(hole)]) < 0) {
+      var parentIndex = parentIndex(hole);
+      var temp = array[parentIndex];
+      array[parentIndex] = x;
+      array[hole] = temp;
+      hole = parentIndex;
+      System.out.println("Switched up: " + x + " Swtiched down: " + temp);
+    }
     for (; hole * 2 <= currentSize; hole = child) {
       child = hole * 2;
       if (child != currentSize &&
