@@ -75,19 +75,37 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
     if (currentSize == array.length - 1)
       enlargeArray(array.length * 2 + 1);
     // Percolate up
-    for (var any : array) {
-      System.out.println(any);
+    System.out.println("child amount: " + d);
+    ;
+    System.out.println("tree before insert: ");
+    for (int i = 0; i < array.length; i++) {
+      System.out.println("Index: " + i + " Value: " + array[i]);
     }
     int hole = ++currentSize;
-    for (array[0] = x; hole > 1 && x.compareTo(array[dMath(hole)]) < 0; hole = dMath(hole))
-      array[hole] = array[dMath(hole)];
     array[hole] = x;
+    while (hole > 1 && x.compareTo(array[parentIndex(hole)]) < 0) {
+      var parentIndex = parentIndex(hole);
+      var temp = array[parentIndex];
+      array[parentIndex] = x;
+      array[hole] = temp;
+      hole = parentIndex;
+      System.out.println("Switched up: " + x + " Swtiched down: " + temp);
+    }
+
+    // for (array[0] = x; hole > 1 && x.compareTo(array[dMath(hole)]) < 0; hole =
+    // dMath(hole))
+    // array[hole] = array[dMath(hole)];
+    // array[hole] = x;
+    System.out.println("tree after insert: ");
+    for (int i = 0; i < array.length; i++) {
+      System.out.println("Index: " + i + " Value: " + array[i]);
+    }
   }
 
-  private int dMath(int hole) {
-    var res = (hole - 2) / d + 1;
-    return res;
-  }
+  // private int dMath(int hole) {
+  // var res = (hole - 2) / d + 1;
+  // return res;
+  // }
 
   @SuppressWarnings("unchecked")
   private void enlargeArray(int newSize) {
@@ -153,7 +171,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
   private static final int DEFAULT_CHILDREN = 2;
 
   private int currentSize; // Number of elements in heap
-  private int d; // Number of elements in heap
+  private int d; // Number of chidlren per node
   private AnyType[] array; // The heap array
 
   /**
@@ -193,7 +211,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
   }
 
   public int firstChildIndex(int index) throws IllegalArgumentException {
-    if (index == 0) {
+    if (index <= 0) {
       throw new IllegalArgumentException();
     }
     return d * (index - 1) + 2;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="alda.theme5.DHeapTest" time="0.016" tests="8" errors="0" skipped="0" failures="2">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="alda.theme5.DHeapTest" time="0.02" tests="8" errors="0" skipped="0" failures="2">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-25-openjdk/lib"/>
-    <property name="sun.java.command" value="/home/durelius/dsv/alda/priority_queue/code/target/surefire/surefirebooter-20260207025349898_3.jar /home/durelius/dsv/alda/priority_queue/code/target/surefire 2026-02-07T02-53-49_849-jvmRun1 surefire-20260207025349898_1tmp surefire_0-20260207025349898_2tmp"/>
+    <property name="sun.java.command" value="/home/durelius/dsv/alda/priority_queue/code/target/surefire/surefirebooter-20260207162222706_3.jar /home/durelius/dsv/alda/priority_queue/code/target/surefire 2026-02-07T16-22-22_660-jvmRun1 surefire-20260207162222706_1tmp surefire_0-20260207162222706_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/durelius/dsv/alda/priority_queue/code/target/test-classes:/home/durelius/dsv/alda/priority_queue/code/target/classes:/home/durelius/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/home/durelius/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/durelius/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/home/durelius/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/durelius/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/durelius/dsv/alda/priority_queue/code/target/surefire/surefirebooter-20260207025349898_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/durelius/dsv/alda/priority_queue/code/target/surefire/surefirebooter-20260207162222706_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25.0.1"/>
     <property name="user.name" value="durelius"/>
@@ -56,8 +56,8 @@
   </properties>
   <testcase name="testConstructors" classname="alda.theme5.DHeapTest" time="0.001"/>
   <testcase name="testTooSmallD" classname="alda.theme5.DHeapTest" time="0.001"/>
-  <testcase name="testFunctionality" classname="alda.theme5.DHeapTest" time="0.005">
-    <failure message="expected: &lt;333&gt; but was: &lt;550&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <333> but was: <550>
+  <testcase name="testFunctionality" classname="alda.theme5.DHeapTest" time="0.009">
+    <failure message="expected: &lt;651&gt; but was: &lt;715&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <651> but was: <715>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
 	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
@@ -69,77 +69,188 @@
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
 ]]></failure>
-    <system-out><![CDATA[null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-4
-4
-null
-null
-null
-null
-null
-null
-null
-null
-null
-699
-4
-699
-null
-null
-null
-null
-null
-null
-null
-null
-333
-4
-699
-333
-null
-null
-null
-null
-null
-null
-null
-550
-4
-699
-333
-550
-null
-null
-null
-null
-null
-null
-679
-550
-699
-333
-679
-679
-null
-null
-null
-null
-null
+    <system-out><![CDATA[child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: null
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 566
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 566
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 307
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 307
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 307
+Index: 2 Value: 651
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 307
+Index: 2 Value: 651
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 307
+Index: 2 Value: 651
+Index: 3 Value: 715
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 715
+Index: 2 Value: 651
+Index: 3 Value: 715
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+Switched up: 575 Swtiched down: 715
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 575
+Index: 2 Value: 651
+Index: 3 Value: 715
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 715
+Index: 2 Value: 651
+Index: 3 Value: 715
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+Switched up: 595 Swtiched down: 715
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 595
+Index: 2 Value: 651
+Index: 3 Value: 715
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 715
+Index: 2 Value: 651
+Index: 3 Value: 715
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 715
+Index: 2 Value: 651
+Index: 3 Value: 733
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
 ]]></system-out>
   </testcase>
-  <testcase name="testTooLowChildIndex" classname="alda.theme5.DHeapTest" time="0.001"/>
+  <testcase name="testTooLowChildIndex" classname="alda.theme5.DHeapTest" time="0.0"/>
   <testcase name="testParentIndex" classname="alda.theme5.DHeapTest" time="0.0"/>
-  <testcase name="testContent" classname="alda.theme5.DHeapTest" time="0.002">
+  <testcase name="testContent" classname="alda.theme5.DHeapTest" time="0.005">
     <failure message="expected: &lt;4&gt; but was: &lt;10&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <4> but was: <10>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -153,144 +264,316 @@ null
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
 ]]></failure>
-    <system-out><![CDATA[null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-17
-17
-null
-null
-null
-null
-null
-null
-null
-null
-null
-23
-17
-23
-null
-null
-null
-null
-null
-null
-null
-null
-5
-5
-23
-17
-null
-null
-null
-null
-null
-null
-null
-12
-5
-23
-17
-12
-null
-null
-null
-null
-null
-null
-100
-5
-23
-17
-12
-100
-null
-null
-null
-null
-null
-51
-5
-23
-17
-12
-100
-51
-null
-null
-null
-null
-52
-5
-23
-17
-12
-100
-51
-52
-null
-null
-null
-4
-4
-5
-17
-12
-100
-51
-52
-23
-null
-null
-70
-4
-5
-17
-12
-100
-51
-52
-23
-70
-null
-10
-4
-5
-10
-12
-100
-51
-52
-23
-70
-17
-null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-null
+    <system-out><![CDATA[child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: null
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 17
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 17
+Index: 2 Value: null
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 17
+Index: 2 Value: 23
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 17
+Index: 2 Value: 23
+Index: 3 Value: null
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+Switched up: 5 Swtiched down: 17
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: null
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: null
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: null
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: null
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 5
+Index: 2 Value: 23
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: null
+Index: 9 Value: null
+Index: 10 Value: null
+Switched up: 4 Swtiched down: 23
+Switched up: 4 Swtiched down: 5
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 4
+Index: 2 Value: 5
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: null
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 4
+Index: 2 Value: 5
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: null
+Index: 10 Value: null
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 4
+Index: 2 Value: 5
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: 70
+Index: 10 Value: null
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 4
+Index: 2 Value: 5
+Index: 3 Value: 17
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: 70
+Index: 10 Value: null
+Switched up: 10 Swtiched down: 17
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 4
+Index: 2 Value: 5
+Index: 3 Value: 10
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: 70
+Index: 10 Value: 17
+child amount: 4
+tree before insert: 
+Index: 0 Value: null
+Index: 1 Value: 4
+Index: 2 Value: 5
+Index: 3 Value: 10
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: 70
+Index: 10 Value: 17
+Index: 11 Value: null
+Index: 12 Value: null
+Index: 13 Value: null
+Index: 14 Value: null
+Index: 15 Value: null
+Index: 16 Value: null
+Index: 17 Value: null
+Index: 18 Value: null
+Index: 19 Value: null
+Index: 20 Value: null
+Index: 21 Value: null
+Index: 22 Value: null
+Switched up: 1 Swtiched down: 10
+Switched up: 1 Swtiched down: 4
+tree after insert: 
+Index: 0 Value: null
+Index: 1 Value: 1
+Index: 2 Value: 5
+Index: 3 Value: 4
+Index: 4 Value: 12
+Index: 5 Value: 100
+Index: 6 Value: 51
+Index: 7 Value: 52
+Index: 8 Value: 23
+Index: 9 Value: 70
+Index: 10 Value: 17
+Index: 11 Value: 10
+Index: 12 Value: null
+Index: 13 Value: null
+Index: 14 Value: null
+Index: 15 Value: null
+Index: 16 Value: null
+Index: 17 Value: null
+Index: 18 Value: null
+Index: 19 Value: null
+Index: 20 Value: null
+Index: 21 Value: null
+Index: 22 Value: null
 ]]></system-out>
-    <system-err><![CDATA[alda.theme5.DHeap@2f7298b
-alda.theme5.DHeap@2f7298b
+    <system-err><![CDATA[alda.theme5.DHeap@7193666c
+alda.theme5.DHeap@7193666c
 ]]></system-err>
   </testcase>
-  <testcase name="testFirstChildIndex" classname="alda.theme5.DHeapTest" time="0.0"/>
-  <testcase name="testTooLowParentIndex" classname="alda.theme5.DHeapTest" time="0.001"/>
+  <testcase name="testFirstChildIndex" classname="alda.theme5.DHeapTest" time="0.001"/>
+  <testcase name="testTooLowParentIndex" classname="alda.theme5.DHeapTest" time="0.0"/>
 </testsuite>
