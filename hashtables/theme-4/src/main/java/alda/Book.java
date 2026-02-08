@@ -70,20 +70,25 @@ public class Book {
   /*
    * Jag implementearade hashcode för ISBN10 och
    * myString med hjälp av primtal och ASCII värdena för karaktärerna.
-   *  Sedan beräknar vi en ny hashkod för book med hjälp av de tidigare 
-   *  hashkoderna för egenskaperna hos boken, samt det gånger det valda primtalet.
-   *  Detta gör att ordningen på värdena spelar roll, både på subklasserna och på boken.
-   *  Resultatet blir en bra spridning av hashkoder, i testerna får vi 
-   * -674944775 och 2068892688 vilket är extremt långt ifrån varandra, för ganska lika värden.
-   *  Även equals behövde implementeras för stödklasserna och book-klassen.
-   *  Overflow är tillåtet här, det skadar inte metoden.
+   * Sedan beräknar vi en ny hashkod för book med hjälp av de tidigare
+   * hashkoderna för egenskaperna hos boken, samt det gånger det valda primtalet.
+   * Valde att inte ta med content som en del av hashkodningen, då det kan vara en
+   * extremt lång sträng, och är resten av egenskaperna samma så bör det vara
+   * samma bok.
+   * Detta gör att ordningen på värdena spelar roll, både på subklasserna och på
+   * boken.
+   * Resultatet blir en bra spridning av hashkoder, i testerna får vi
+   * -1548337450 och 1408898365 vilket är extremt långt ifrån varandra, för ganska
+   * lika värden.
+   * Även equals behövde implementeras för stödklasserna och book-klassen.
+   * Overflow är tillåtet här, det skadar inte metoden.
    */
   @Override
   public int hashCode() {
-    var hash = primeHash + isbn.hashCode();
+    int hash = primeHash + isbn.hashCode();
     hash = hash * primeHash + (title.hashCode());
     hash = hash * primeHash + (author.hashCode());
-    hash = hash * primeHash + (content.hashCode());
+    System.out.println(hash);
     return hash;
   }
 
