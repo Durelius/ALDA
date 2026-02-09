@@ -57,7 +57,6 @@ public class Book {
     Book other = (Book) o;
     return this.isbn.equals(other.isbn)
         && this.title.equals(other.title)
-        && this.author.equals(other.author)
         && this.content.equals(other.content);
   }
 
@@ -75,6 +74,8 @@ public class Book {
    * Valde att inte ta med content som en del av hashkodningen, då det kan vara en
    * extremt lång sträng, och är resten av egenskaperna samma så bör det vara
    * samma bok.
+   * Det är samma värden som används i 'equals' och beräkning av hashcode enligt
+   * kraven för hashning i Java.
    * Detta gör att ordningen på värdena spelar roll, både på subklasserna och på
    * boken.
    * Resultatet blir en bra spridning av hashkoder, i testerna får vi

@@ -1,5 +1,0 @@
-class Exempel{
-	
-	int i;
-	
-}
