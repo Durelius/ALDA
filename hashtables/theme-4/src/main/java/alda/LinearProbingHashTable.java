@@ -1,5 +1,6 @@
 package alda;
 
+//widu7139 Wilhelm Durelius
 public class LinearProbingHashTable<T> extends ProbingHashTable<T> {
 
   /*

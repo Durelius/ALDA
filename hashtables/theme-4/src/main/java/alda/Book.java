@@ -1,5 +1,5 @@
 package alda;
-
+//widu7139 Wilhelm Durelius
 /*
  * Denna klass ska förberedas för att kunna användas som nyckel i en hashtabell. 
  * Du får göra nödvändiga ändringar även i klasserna MyString och ISBN10.

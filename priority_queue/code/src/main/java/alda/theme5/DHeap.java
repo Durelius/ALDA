@@ -1,5 +1,5 @@
-
 package alda.theme5;
+//widu7139 Wilhelm Durelius
 
 //DHeap class
 //
@@ -22,6 +22,13 @@ package alda.theme5;
  * @author Wilhelm Durelius
  */
 public class DHeap<AnyType extends Comparable<? super AnyType>> {
+  private static final int DEFAULT_CAPACITY = 10;
+  private static final int DEFAULT_CHILDREN = 2;
+
+  private int currentSize; // Number of elements in heap
+  private int children; // Number of chidlren per node
+  private AnyType[] array; // The heap array
+
   /**
    * Construct the DHeap.
    */
@@ -34,12 +41,12 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
    * 
    * @param d the amount of children for each node.
    */
-  @SuppressWarnings("unchecked")
+
   public DHeap(int d) throws IllegalArgumentException {
     if (d < 2)
       throw new IllegalArgumentException();
     currentSize = 0;
-    this.d = d;
+    this.children = d;
     array = (AnyType[]) new Comparable[DEFAULT_CAPACITY + 1];
   }
 
@@ -53,9 +60,9 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
   /**
    * Construct the DHeap given an array of items and custom children size.
    */
-  @SuppressWarnings("unchecked")
+
   public DHeap(AnyType[] items, int d) {
-    this.d = d;
+    this.children = d;
     currentSize = items.length;
     array = (AnyType[]) new Comparable[(currentSize + 2) * 11 / 10];
 
@@ -86,8 +93,6 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
     }
   }
 
-
-  @SuppressWarnings("unchecked")
   private void enlargeArray(int newSize) {
     AnyType[] old = array;
     array = (AnyType[]) new Comparable[newSize];
@@ -127,7 +132,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
    * arrangement of items. Runs in linear time.
    */
   private void buildHeap() {
-    for (int i = currentSize / d; i > 0; i--)
+    for (int i = currentSize / children; i > 0; i--)
       percolateDown(i);
   }
 
@@ -147,13 +152,6 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
     currentSize = 0;
   }
 
-  private static final int DEFAULT_CAPACITY = 10;
-  private static final int DEFAULT_CHILDREN = 2;
-
-  private int currentSize; // Number of elements in heap
-  private int d; // Number of chidlren per node
-  private AnyType[] array; // The heap array
-
   /**
    * Internal method to percolate down in the heap.
    * 
@@ -163,7 +161,7 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
     while (firstChildIndex(hole) <= currentSize) {
       int firstChild = firstChildIndex(hole);
       int prioChild = firstChild;
-      for (int i = 1; i < d; i++) {
+      for (int i = 1; i < children; i++) {
         int child = firstChild + i;
         if (child > currentSize)
           break;
@@ -194,14 +192,14 @@ public class DHeap<AnyType extends Comparable<? super AnyType>> {
   public int parentIndex(int index) throws IllegalArgumentException {
     if (index <= 1)
       throw new IllegalArgumentException();
-    return (index - 2) / d + 1;
+    return (index - 2) / children + 1;
   }
 
   public int firstChildIndex(int index) throws IllegalArgumentException {
     if (index <= 0) {
       throw new IllegalArgumentException();
     }
-    return d * (index - 1) + 2;
+    return children * (index - 1) + 2;
   }
 
   // Test program

@@ -1,4 +1,5 @@
 package alda;
+//widu7139 Wilhelm Durelius
 
 public class DoubleHashingProbingHashTable<T> extends ProbingHashTable<T> {
 
