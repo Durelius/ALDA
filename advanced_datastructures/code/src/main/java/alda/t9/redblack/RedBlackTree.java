@@ -2,6 +2,8 @@
 package alda.t9.redblack;
 //RedBlackTree class
 
+import java.rmi.UnexpectedException;
+
 //CONSTRUCTION: with no parameters
 //
 //******************PUBLIC OPERATIONS*********************
@@ -151,8 +153,7 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
 
         current = parent = grand = header;
         nullNode.element = toRemove;
-        var r = header;
-        r.color = RED;
+        header.color = RED;
         while (compare(toRemove, current) != 0) {
             great = grand;
             grand = parent;
@@ -162,26 +163,57 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
             var t = parent.left == x ? parent.right : parent.left;
             var p = parent;
 
-            if (x.color == BLACK) {
-
-            }
-
             if (bothChildrenBlack(x)) {
+                boolean didChange = false;
+                RedBlackNode<AnyType> newSubRoot = nullNode;
                 if (bothChildrenBlack(t)) {
                     flipColor(x);
                     flipColor(t);
                     flipColor(p);
+                } else if (t.right.color == RED) {
+                    newSubRoot = rotateLeft(p);
+                    t.color = p.color;
+                    p.color = BLACK;
+                    t.right.color = BLACK;
+                    didChange = true;
+                } else if (t.left.color == RED) {
+                    t.color = p.color; 
+                    p.color = BLACK; 
+                    t.left.color = BLACK; 
+                    p.right = rotateRight(p.right);
+                    newSubRoot = rotateLeft(p);
+                    didChange = true;
                 } else {
-                    if (t.left.color == RED) {
-                        rotateWithLeftChild(t);
-                    } else {
-                        rotateWithRightChild(t);
-                    }
+                    System.out.println("impossible case");
+                    throw new UnderflowException();
+                }
+                if (!didChange)
+                    continue;
+                if (grand == nullNode) {
+                    header.right = newSubRoot;
+                } else if (grand.left == parent) {
+                    grand.left = newSubRoot;
+                } else {
+                    grand.right = newSubRoot;
+                }
+                continue;
+            } else {
+
+                if (x.color == RED) {
+                    continue;
+                }
+                if (t.color == RED) {
+
                 }
             }
+
         }
         // toRemove is a leaf
-        if (current.left == nullNode && current.right == nullNode) {
+        if (current.left == nullNode && current.right == nullNode)
+
+        {
+            if (current.color == BLACK)
+                System.out.println("Deleting black node");
             if (compare(toRemove, parent) < 0)
                 parent.left = nullNode;
             else
@@ -211,7 +243,22 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
             remove(toRemove);
             return;
         }
-        handleReorient(toRemove);
+
+        header.color = BLACK;
+    }
+
+    RedBlackNode<AnyType> rotateLeft(RedBlackNode<AnyType> p) {
+        RedBlackNode<AnyType> r = p.right;
+        p.right = r.left;
+        r.left = p;
+        return r;
+    }
+
+    RedBlackNode<AnyType> rotateRight(RedBlackNode<AnyType> p) {
+        RedBlackNode<AnyType> l = p.left;
+        p.left = l.right;
+        l.right = p;
+        return l;
     }
 
     private boolean bothChildrenBlack(RedBlackNode<AnyType> node) {
