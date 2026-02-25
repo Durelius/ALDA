@@ -105,6 +105,7 @@ Best case för insertion sort är $O(n)$ på en redan sorterad lista.
 Selection sort är bra när man vill göra få förflyttningar, då varje element flyttas enbart en gång.
 Då har vi $n$ förflyttningar, men $n^2$ jämförelser.
 
+
 Båda dessa ökar dock i tidskomplexitet snabbt vid större datamängder, med tanke på att de är
 $O(n^2)$ algoritmer.
 
@@ -122,7 +123,7 @@ En väldigt förenklad visualisering av en implementation av bucket sort kan då
 där $key$ är månaden, och $value$ är en lista med människor som är födda den månaden.
 Varje gång vi vill lägga till en människa i en bucket, gör vi då 
 \begin{lstlisting}
-bucket[person.year].append(person)
+bucket[person.month].append(person)
 \end{lstlisting}
 för att lägga till en person på rätt ställe.
 
