@@ -52,20 +52,6 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
             return element == null ? "NULL" : element.toString();
         }
 
-        /**
-         * Find the smallest child of the node.
-         * 
-         * @return the smallest item or throw UnderflowExcepton if empty.
-         */
-        public RedBlackNode<AnyType> findMin(RedBlackNode<AnyType> nullNode) {
-            var current = this;
-
-            while (current.left != nullNode)
-                current = current.left;
-
-            return current;
-        }
-
     }
 
     private static final int BLACK = 1; // BLACK must be 1
@@ -175,7 +161,7 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
             // if current is black and the child we will go to is black
             if (current.color == BLACK && getChild(current, iDir).color == BLACK) {
                 RedBlackNode<AnyType> sibling = getChild(grand, revDir(prevDir));
-
+                // if next has red child in other direction
                 if (getChild(current, revDir(iDir)).color == RED) {
                     // Rotate current with its red child to make current red
                     RedBlackNode<AnyType> subTreeRoot = rotate(current, revDir(iDir));
@@ -202,18 +188,18 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
                         // sibling has a red child
                         int jDir = (great.right == grand) ? RIGHT : LEFT;
                         if (getChild(sibling, revDir(prevDir)).color == RED) {
-                            RedBlackNode<AnyType> r = rotate(grand, revDir(prevDir));
-                            setChild(great, jDir, r);
-                            r.color = grand.color;
-                            r.left.color = BLACK;
-                            r.right.color = BLACK;
+                            RedBlackNode<AnyType> subTreeRoot = rotate(grand, revDir(prevDir));
+                            setChild(great, jDir, subTreeRoot);
+                            subTreeRoot.color = grand.color;
+                            subTreeRoot.left.color = BLACK;
+                            subTreeRoot.right.color = BLACK;
                         } else {
                             setChild(grand, revDir(prevDir), rotate(sibling, prevDir));
-                            RedBlackNode<AnyType> r = rotate(grand, revDir(prevDir));
-                            setChild(great, jDir, r);
-                            r.color = grand.color;
-                            r.left.color = BLACK;
-                            r.right.color = BLACK;
+                            RedBlackNode<AnyType> subTreeRoot = rotate(grand, revDir(prevDir));
+                            setChild(great, jDir, subTreeRoot);
+                            subTreeRoot.color = grand.color;
+                            subTreeRoot.left.color = BLACK;
+                            subTreeRoot.right.color = BLACK;
                         }
                         current.color = RED;
                     }
@@ -268,116 +254,6 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
         }
     }
 
-    private void printTreeWithColor() {
-        RedBlackNode<AnyType> root = header.right;
-        if (root == nullNode) {
-            System.out.println("[empty tree]");
-            return;
-        }
-        System.out.println("-----TREE START-----");
-        printTree(root, "", true);
-        System.out.println("-----TREE END-----");
-    }
-
-    private void printTree(RedBlackNode<AnyType> node, String prefix, boolean isRight) {
-        if (node == nullNode)
-            return;
-
-        // Print right subtree first (so tree reads left=bottom, right=top)
-        printTree(node.right, prefix + (isRight ? "    " : "|   "), true);
-
-        // Print current node
-        String connector = isRight ? "┌── " : "└── ";
-        String color = node.color == RED ? "(R)" : "(B)";
-        System.out.println(prefix + connector + node.element + color);
-
-        // Print left subtree
-        printTree(node.left, prefix + (isRight ? "|   " : "    "), false);
-    }
-
-    private boolean bothChildrenBlack(RedBlackNode<AnyType> node) {
-        return node.left.color == BLACK && node.right.color == BLACK;
-    }
-
-    private void flipColor(RedBlackNode<AnyType> node) {
-        if (node == nullNode)
-            return;
-        node.color = node.color == RED ? BLACK : RED;
-    }
-
-    private void validateRedBlackTree() {
-        StackTraceElement caller = Thread.currentThread().getStackTrace()[2]; // [2] = whoever called this method
-        printTreeWithColor();
-        try {
-            Object header = this.header;
-            Object root = getRight(header);
-            int expectedBlackNodes = countExpectedBlackNodes(root, nullNode);
-            validateRedBlackTree(expectedBlackNodes, 0, BLACK, root, nullNode);
-        } catch (Exception e) {
-            System.err.println("Called from " + caller.getMethodName() + "() line " + caller.getLineNumber() + ": "
-                    + e.getMessage());
-            System.exit(1);
-        }
-    }
-
-    private void validateRedBlackTree(int expectedBlackNodes, int actualBlackNodes, int parentColor, Object node,
-            Object nullNode) throws NoSuchFieldException, IllegalAccessException {
-        if (node == nullNode) {
-            if (actualBlackNodes != expectedBlackNodes) {
-                throw new RuntimeException("Wrong number of black nodes in path: expected "
-                        + expectedBlackNodes + " but got " + actualBlackNodes);
-            }
-        } else {
-            int color = getColor(node);
-            switch (color) {
-                case BLACK:
-                    actualBlackNodes++;
-                    break;
-                case RED:
-                    if (parentColor != BLACK) {
-                        throw new RuntimeException("Red node has a red parent — two consecutive red nodes");
-                    }
-                    break;
-                default:
-                    throw new RuntimeException("Unexpected color: " + color);
-            }
-            validateRedBlackTree(expectedBlackNodes, actualBlackNodes, color, getLeft(node), nullNode);
-            validateRedBlackTree(expectedBlackNodes, actualBlackNodes, color, getRight(node), nullNode);
-        }
-    }
-
-    private int getColor(Object node)
-            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        Field field = node.getClass().getDeclaredField("color");
-        field.setAccessible(true);
-        return field.getInt(node);
-    }
-
-    private Object getLeft(Object node)
-            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        Field field = node.getClass().getDeclaredField("left");
-        field.setAccessible(true);
-        return field.get(node);
-    }
-
-    private Object getRight(Object node)
-            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        Field field = node.getClass().getDeclaredField("right");
-        field.setAccessible(true);
-        return field.get(node);
-    }
-
-    private int countExpectedBlackNodes(Object root, Object nullNode)
-            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        int count = 0;
-        Object node = root;
-        while (node != nullNode) {
-            if (getColor(node) == BLACK)
-                count++;
-            node = getLeft(node);
-        }
-        return count;
-    }
 
     /**
      * Find the smallest item the tree.
