@@ -1,8 +1,8 @@
 // Feel free to use packages in your own environment, but remember to remove when handing it in
 package alda.t9.redblack;
-//RedBlackTree class
+//Wilhelm Durelius widu7139
 
-import java.lang.reflect.Field;
+//RedBlackTree class
 
 //CONSTRUCTION: with no parameters
 //
@@ -55,8 +55,10 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
     }
 
     private static final int BLACK = 1; // BLACK must be 1
-
     private static final int RED = 0;
+    private static final int LEFT = 0;
+    private static final int RIGHT = 1;
+
     private RedBlackNode<AnyType> header;
     private RedBlackNode<AnyType> nullNode;
     // Used in insert routine and its helpers
@@ -65,9 +67,10 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
     private RedBlackNode<AnyType> grand;
 
     private RedBlackNode<AnyType> great;
+    private RedBlackNode<AnyType> found;
 
-    private static int LEFT = 0;
-    private static int RIGHT = 1;
+    private int dir = 1;
+    private int prevDir = 1;
 
     /**
      * Construct the tree.
@@ -111,149 +114,52 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
         handleReorient(item);
     }
 
-    /**
-     * Remove from the tree.
-     * <p>
-     * The current version works, but is extremely inefficient since it copies the
-     * entire content for each remove operation. Your job is to replace it with an
-     * efficient version that works on the tree directly.
-     * 
-     * @param x the item to remove.
-     */
-    public void removeOld(AnyType x) {
-        if (!contains(x))
-            return;
-        // Fusk-implementation
-        RedBlackTree<AnyType> newTree = new RedBlackTree<>();
-
-        remove(newTree, header.right, x);
-
-        header = newTree.header;
-        nullNode = newTree.nullNode;
-    }
-
     // remove method inspired by:
     // https://web.archive.org/web/20171008115143/http://www.eternallyconfuzzled.com/tuts/datastructures/jsw_tut_rbtree.aspx
-    public void remove(AnyType x) {
-        if (isEmpty() || !contains(x))
+    public void remove(AnyType toRemove) {
+        if (!removalSetup(toRemove))
             return;
-
-        RedBlackNode<AnyType> current = header.right;
-        RedBlackNode<AnyType> parent = header;
-        RedBlackNode<AnyType> grand = nullNode;
-        RedBlackNode<AnyType> great = nullNode;
-        RedBlackNode<AnyType> found = nullNode;
-
-        int iDir = 1; // direction from parent to current (1 = right, 0 = left)
-        int prevDir = 1; // previous direction
-
         while (current != nullNode) {
-            great = grand;
-            grand = parent;
-            parent = current;
-            prevDir = iDir;
-            iDir = compare(x, current) < 0 ? LEFT : RIGHT;
-
-            if (compare(x, current) == 0) {
-                found = current;
-            }
-
+            removalLoopInit(toRemove);
             // if current is black and the child we will go to is black
-            if (current.color == BLACK && getChild(current, iDir).color == BLACK) {
+            if (current.color == BLACK && getChild(current, dir).color == BLACK) {
                 RedBlackNode<AnyType> sibling = getChild(grand, revDir(prevDir));
                 // if next has red child in other direction
-                if (getChild(current, revDir(iDir)).color == RED) {
+                if (getChild(current, revDir(dir)).color == RED) {
                     // Rotate current with its red child to make current red
-                    RedBlackNode<AnyType> subTreeRoot = rotate(current, revDir(iDir));
-                    subTreeRoot.color = BLACK;
-                    current.color = RED;
-                    setChild(grand, prevDir, subTreeRoot);
-                    grand = subTreeRoot;
+                    RedBlackNode<AnyType> subTreeRoot = rotate(current, revDir(dir));
+                    setColors(subTreeRoot, BLACK, current, RED);
+                    grand = setChild(grand, prevDir, subTreeRoot);
                 } else if (sibling.color == RED) {
                     RedBlackNode<AnyType> subTreeRoot = rotate(grand, revDir(prevDir));
-                    setChild(great, (great.right == grand) ? RIGHT : LEFT, subTreeRoot);
-
-                    subTreeRoot.color = grand.color;
-                    grand.color = RED;
-
-                    great = subTreeRoot;
+                    setColors(subTreeRoot, grand.color, grand, RED);
+                    great = setChild(great, (great.right == grand) ? RIGHT : LEFT, subTreeRoot);
                     sibling = getChild(grand, revDir(prevDir));
-
                 } else if (sibling != nullNode) {
                     if (sibling.left.color == BLACK && sibling.right.color == BLACK) {
-                        grand.color = BLACK;
-                        sibling.color = RED;
-                        current.color = RED;
+                        setColors(grand, BLACK, sibling, RED, current, RED);
                     } else {
-                        // sibling has a red child
-                        int jDir = (great.right == grand) ? RIGHT : LEFT;
+                        int jdir = (great.right == grand) ? RIGHT : LEFT;
                         if (getChild(sibling, revDir(prevDir)).color == RED) {
                             RedBlackNode<AnyType> subTreeRoot = rotate(grand, revDir(prevDir));
-                            setChild(great, jDir, subTreeRoot);
-                            subTreeRoot.color = grand.color;
-                            subTreeRoot.left.color = BLACK;
-                            subTreeRoot.right.color = BLACK;
+                            setChild(great, jdir, subTreeRoot);
+                            setColors(subTreeRoot, grand.color, subTreeRoot.left, BLACK, subTreeRoot.right, BLACK);
                         } else {
                             setChild(grand, revDir(prevDir), rotate(sibling, prevDir));
                             RedBlackNode<AnyType> subTreeRoot = rotate(grand, revDir(prevDir));
-                            setChild(great, jDir, subTreeRoot);
-                            subTreeRoot.color = grand.color;
-                            subTreeRoot.left.color = BLACK;
-                            subTreeRoot.right.color = BLACK;
+                            setChild(great, jdir, subTreeRoot);
+                            setColors(subTreeRoot, grand.color, subTreeRoot.left, BLACK, subTreeRoot.right, BLACK);
                         }
-                        current.color = RED;
+                        setColors(current, RED);
                     }
                 }
             }
             // percolate down
-            current = getChild(current, iDir);
+            current = getChild(current, dir);
         }
-
-        // removal of leaf
-        if (found != nullNode) {
-            found.element = parent.element;
-            RedBlackNode<AnyType> child = getNonNullChild(parent);
-            setChild(grand, (grand.right == parent) ? 1 : 0, child);
-        }
-        header.right.color = BLACK;
-
+        // removal of red leaf
+        removeFoundNode();
     }
-
-    private int revDir(int dir) {
-        return 1 - dir;
-    }
-
-    // gets the child of the direction
-    private RedBlackNode<AnyType> getChild(RedBlackNode<AnyType> node, int dir) {
-        return (dir == LEFT) ? node.left : node.right;
-    }
-
-    private RedBlackNode<AnyType> getNonNullChild(RedBlackNode<AnyType> node) {
-        return node.left != nullNode ? node.left : node.right;
-    }
-
-    private void setChild(RedBlackNode<AnyType> node, int dir, RedBlackNode<AnyType> child) {
-        if (dir == LEFT)
-            node.left = child;
-        else
-            node.right = child;
-    }
-
-    // rotates according to the direction provided
-    private RedBlackNode<AnyType> rotate(RedBlackNode<AnyType> t, int dir) {
-        if (dir == LEFT) { // Rotate with left child
-            RedBlackNode<AnyType> k = t.left;
-            t.left = k.right;
-            k.right = t;
-            return k;
-        } else { // Rotate with right child
-            RedBlackNode<AnyType> k = t.right;
-            t.right = k.left;
-            k.left = t;
-            return k;
-        }
-    }
-
 
     /**
      * Find the smallest item the tree.
@@ -327,6 +233,19 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
     }
 
     /**
+     * Internal method to print a subtree in sorted order.
+     * 
+     * @param t the node that roots the subtree.
+     */
+    private void printTree(RedBlackNode<AnyType> t) {
+        if (t != nullNode) {
+            printTree(t.left);
+            System.out.println(t.element);
+            printTree(t.right);
+        }
+    }
+
+    /**
      * Test if the tree is logically empty.
      * 
      * @return true if empty, false otherwise.
@@ -345,29 +264,6 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
             return 1;
         else
             return item.compareTo(t.element);
-    }
-
-    private void remove(RedBlackTree<AnyType> newTree, RedBlackNode<AnyType> node, AnyType x) {
-        if (node != nullNode) {
-            if (!node.element.equals(x)) {
-                newTree.insert(node.element);
-            }
-            remove(newTree, node.left, x);
-            remove(newTree, node.right, x);
-        }
-    }
-
-    /**
-     * Internal method to print a subtree in sorted order.
-     * 
-     * @param t the node that roots the subtree.
-     */
-    private void printTree(RedBlackNode<AnyType> t) {
-        if (t != nullNode) {
-            printTree(t.left);
-            System.out.println(t.element);
-            printTree(t.right);
-        }
     }
 
     /**
@@ -394,24 +290,6 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
     }
 
     /**
-     * Internal routine that performs a single or double rotation. Because the
-     * result is attached to the parent, there are four cases. Called by
-     * handleReorient.
-     * 
-     * @param item   the item in handleReorient.
-     * @param parent the parent of the root of the rotated subtree.
-     * @return the root of the rotated subtree.
-     */
-    private RedBlackNode<AnyType> rotate(AnyType item, RedBlackNode<AnyType> parent) {
-        if (compare(item, parent) < 0)
-            return parent.left = compare(item, parent.left) < 0 ? rotateWithLeftChild(parent.left) : // LL
-                    rotateWithRightChild(parent.left); // LR
-        else
-            return parent.right = compare(item, parent.right) < 0 ? rotateWithLeftChild(parent.right) : // RL
-                    rotateWithRightChild(parent.right); // RR
-    }
-
-    /**
      * Rotate binary tree node with left child.
      */
     private RedBlackNode<AnyType> rotateWithLeftChild(RedBlackNode<AnyType> node) {
@@ -431,4 +309,127 @@ public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
         return rightChild;
     }
 
+    private int revDir(int dir) {
+        return 1 - dir;
+    }
+
+    // gets the child of the direction
+    private RedBlackNode<AnyType> getChild(RedBlackNode<AnyType> node, int dir) {
+        return (dir == LEFT) ? node.left : node.right;
+    }
+
+    private RedBlackNode<AnyType> getNonNullChild(RedBlackNode<AnyType> node) {
+        return node.left != nullNode ? node.left : node.right;
+    }
+
+    private RedBlackNode<AnyType> setChild(RedBlackNode<AnyType> node, int dir, RedBlackNode<AnyType> child) {
+        if (dir == LEFT)
+            node.left = child;
+        else
+            node.right = child;
+
+        return child;
+    }
+
+    /**
+     * Internal routine that performs a single or double rotation. Because the
+     * result is attached to the parent, there are four cases. Called by
+     * handleReorient.
+     * 
+     * @param item   the item in handleReorient.
+     * @param parent the parent of the root of the rotated subtree.
+     * @return the root of the rotated subtree.
+     */
+    private RedBlackNode<AnyType> rotate(AnyType item, RedBlackNode<AnyType> parent) {
+        if (compare(item, parent) < 0)
+            return parent.left = compare(item, parent.left) < 0 ? rotateWithLeftChild(parent.left) : // LL
+                    rotateWithRightChild(parent.left); // LR
+        else
+            return parent.right = compare(item, parent.right) < 0 ? rotateWithLeftChild(parent.right) : // RL
+                    rotateWithRightChild(parent.right); // RR
+    }
+
+    // rotates according to the direction provided
+    private RedBlackNode<AnyType> rotate(RedBlackNode<AnyType> t, int dir) {
+        if (dir == LEFT) { // Rotate with left child
+            RedBlackNode<AnyType> k = t.left;
+            t.left = k.right;
+            k.right = t;
+            return k;
+        } else { // Rotate with right child
+            RedBlackNode<AnyType> k = t.right;
+            t.right = k.left;
+            k.left = t;
+            return k;
+        }
+    }
+
+    // long method fixer
+    private void setColors(Object... args) {
+        if (args.length % 2 != 0) {
+            throw new IllegalArgumentException(
+                    "Arguments must come in pairs: (RedBlackNode, int)");
+
+        }
+
+        for (int i = 0; i < args.length; i += 2) {
+
+            if (!(args[i] instanceof RedBlackNode<?> node)) {
+                throw new IllegalArgumentException(
+                        "Argument " + i + " must be a RedBlackNode");
+            }
+
+            // if color is not red or black number we throw an exception
+
+            /*
+             * varför ger nedan en error i vpl? Fel: Wrapper typ deklaration
+             * if (!(args[i + 1] instanceof Integer color) || (int) args[i + 1] > 1 || (int)
+             * args[i + 1] < 0) {
+             * throw new IllegalArgumentException(
+             * "Argument " + (i + 1) + " must be red(1) or black(0)");
+             * }
+             */
+
+            if ((int) args[i + 1] > 1 || (int) args[i + 1] < 0) {
+                throw new IllegalArgumentException(
+                        "Argument " + (i + 1) + " must be red(1) or black(0)");
+            }
+
+            int color = (int) args[i + 1];
+
+            node.color = color;
+        }
+    }
+
+    private void removeFoundNode() {
+        if (found != nullNode) {
+            found.element = parent.element;
+            RedBlackNode<AnyType> child = getNonNullChild(parent);
+            setChild(grand, (grand.right == parent) ? 1 : 0, child);
+        }
+        setColors(header.right, BLACK);
+    }
+
+    // runs at start of removal method to initialize values and tell us if we should
+    // continue looping
+    private boolean removalSetup(AnyType toRemove) {
+        if (isEmpty() || !contains(toRemove))
+            return false;
+        found = current = parent = grand = header;
+
+        dir = prevDir = 1;
+        return true;
+    }
+
+    // runs at start of each loop inside remove method to get the next values
+    private void removalLoopInit(AnyType toRemove) {
+        great = grand;
+        grand = parent;
+        parent = current;
+        prevDir = dir;
+        dir = compare(toRemove, current) < 0 ? LEFT : RIGHT;
+        if (compare(toRemove, current) == 0) {
+            found = current;
+        }
+    }
 }
