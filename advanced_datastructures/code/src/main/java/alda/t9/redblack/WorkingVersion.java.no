@@ -1,0 +1,700 @@
+
+// Feel free to use packages in your own environment, but remember to remove when handing it in
+package alda.t9.redblack;
+//RedBlackTree class
+
+import java.lang.reflect.Field;
+
+//CONSTRUCTION: with no parameters
+//
+//******************PUBLIC OPERATIONS*********************
+//void insert( x )       --> Insert x
+//void remove( x )       --> Remove x (unimplemented)
+//boolean contains( x )  --> Return true if x is found
+//Comparable findMin( )  --> Return smallest item
+//Comparable findMax( )  --> Return largest item
+//boolean isEmpty( )     --> Return true if empty; else false
+//void makeEmpty( )      --> Remove all items
+//void printTree( )      --> Print all items
+//******************ERRORS********************************
+//Throws UnderflowException as appropriate
+
+/**
+ * Implements a red-black tree. Note that all "matching" is based on the
+ * compareTo method.
+ * <p>
+ * Modified with a working, but extremely inefficient implementation of remove,
+ * and following Checkstyles styleguide.
+ * 
+ * @author Mark Allen Weiss
+ */
+public class RedBlackTree<AnyType extends Comparable<? super AnyType>> {
+    private static class RedBlackNode<AnyType> {
+        private AnyType element; // The data in the node
+        private RedBlackNode<AnyType> left; // Left child
+        private RedBlackNode<AnyType> right; // Right child
+        private int color; // Color
+                           //
+
+        // Constructors
+        RedBlackNode(AnyType theElement) {
+            this(theElement, null, null);
+        }
+
+        RedBlackNode(AnyType theElement, RedBlackNode<AnyType> lt, RedBlackNode<AnyType> rt) {
+            element = theElement;
+            left = lt;
+            right = rt;
+            color = RedBlackTree.BLACK;
+        }
+
+        @Override
+        public String toString() {
+            return element == null ? "NULL" : element.toString();
+        }
+
+        /**
+         * Find the smallest child of the node.
+         * 
+         * @return the smallest item or throw UnderflowExcepton if empty.
+         */
+        public RedBlackNode<AnyType> findMin(RedBlackNode<AnyType> nullNode) {
+            var current = this;
+
+            while (current.left != nullNode)
+                current = current.left;
+
+            return current;
+        }
+
+    }
+
+    private static final int BLACK = 1; // BLACK must be 1
+
+    private static final int RED = 0;
+    private RedBlackNode<AnyType> header;
+    private RedBlackNode<AnyType> nullNode;
+    // Used in insert routine and its helpers
+    private RedBlackNode<AnyType> current;
+    private RedBlackNode<AnyType> parent;
+    private RedBlackNode<AnyType> grand;
+
+    private RedBlackNode<AnyType> great;
+
+    static int LEFT = 1;
+    static int RIGHT = 2;
+
+    /**
+     * Construct the tree.
+     */
+    public RedBlackTree() {
+        nullNode = new RedBlackNode<>(null);
+        nullNode.left = nullNode.right = nullNode;
+        header = new RedBlackNode<>(null);
+        header.left = header.right = nullNode;
+    }
+
+    /**
+     * Insert into the tree.
+     * 
+     * @param item the item to insert.
+     */
+    public void insert(AnyType item) {
+        current = parent = grand = header;
+        nullNode.element = item;
+        while (compare(item, current) != 0) {
+            great = grand;
+            grand = parent;
+            parent = current;
+            current = compare(item, current) < 0 ? current.left : current.right;
+
+            // Check if two red children; fix if so
+            if (current.left.color == RED && current.right.color == RED)
+                handleReorient(item);
+        }
+
+        // Insertion fails if already present
+        if (current != nullNode)
+            return;
+        current = new RedBlackNode<>(item, nullNode, nullNode);
+
+        // Attach to parent
+        if (compare(item, parent) < 0)
+            parent.left = current;
+        else
+            parent.right = current;
+        handleReorient(item);
+    }
+
+    /**
+     * Remove from the tree.
+     * <p>
+     * The current version works, but is extremely inefficient since it copies the
+     * entire content for each remove operation. Your job is to replace it with an
+     * efficient version that works on the tree directly.
+     * 
+     * @param x the item to remove.
+     */
+    public void removeOld(AnyType x) {
+        if (!contains(x))
+            return;
+        // Fusk-implementation
+        RedBlackTree<AnyType> newTree = new RedBlackTree<>();
+
+        remove(newTree, header.right, x);
+
+        header = newTree.header;
+        nullNode = newTree.nullNode;
+    }
+
+    // public void remove(AnyType toRemove) {
+    // if (!contains(toRemove))
+    // return;
+    //
+    // current = parent = grand = header;
+    // nullNode.element = toRemove;
+    // header.color = RED;
+    // System.out.println("To delete: " + toRemove);
+    // System.out.println("Before start tree: ");
+    // validateRedBlackTree();
+    // while (true) {
+    // if (compare(toRemove, current) == 0) {
+    // if (current.left == nullNode && current.right == nullNode)
+    // break;
+    // RedBlackNode<AnyType> successor = current.right.findMin(nullNode);
+    // current.element = successor.element;
+    // toRemove = successor.element;
+    // nullNode.element = toRemove;
+    // continue;
+    // }
+    // great = grand;
+    // grand = parent;
+    // parent = current;
+    // current = compare(toRemove, current) < 0 ? current.left : current.right;
+    // var x = current;
+    // var t = parent.left == x ? parent.right : parent.left;
+    // var p = parent;
+    // System.out.println("During operations tree: ");
+    // printTreeWithColor();
+    // }
+    // System.out.println("Last x: " + current.element);
+    // header.color = BLACK;
+    // header.right.color = BLACK;
+    // System.out.println("X was red before deletion: " + (current.color == RED));
+    // if (current.left != nullNode && current.right != nullNode) {
+    // // internal node: find inorder successor (leftmost of right subtree)
+    // RedBlackNode<AnyType> successor = current.right;
+    // while (successor.left != nullNode)
+    // successor = successor.left;
+    //
+    // // swap elements
+    // current.element = successor.element;
+    //
+    // // now splice out successor — it has at most a right child
+    // // find successor's parent
+    // RedBlackNode<AnyType> successorParent = current;
+    // RedBlackNode<AnyType> s = current.right;
+    // while (s.left != nullNode) {
+    // successorParent = s;
+    // s = s.left;
+    // }
+    // // splice out
+    // if (successorParent.left == s)
+    // successorParent.left = s.right;
+    // else
+    // successorParent.right = s.right;
+    // } else {
+    // // leaf or one child — splice directly
+    // RedBlackNode<AnyType> child = current.left != nullNode ? current.left :
+    // current.right;
+    // if (parent.left == current)
+    // parent.left = child;
+    // else
+    // parent.right = child;
+    // }
+    // validateRedBlackTree();
+    // // toRemove is a leaf
+    // // if (current.left == nullNode && current.right == nullNode)
+    // //
+    // // {
+    // // if (current.color == BLACK)
+    // // System.out.println("Deleting black node");
+    // // if (compare(toRemove, parent) < 0)
+    // // parent.left = nullNode;
+    // // else
+    // // parent.right = nullNode;
+    // // // toremove has 2 children
+    // // } else if (current.left != nullNode && current.right != nullNode) {
+    // // RedBlackNode<AnyType> succ = current.right.findMin(nullNode);
+    // // var temp = succ.element;
+    // // succ.element = current.element;
+    // // current.element = temp;
+    // // remove(toRemove);
+    // // } else if (current.right != nullNode && current.left == nullNode) {
+    // // var child = current.right;
+    // // RedBlackNode<AnyType> succ = child.findMin(nullNode);
+    // // var temp = succ.element;
+    // // succ.element = current.element;
+    // // current.element = temp;
+    // // remove(toRemove);
+    // // } else if (current.right == nullNode && current.left != nullNode) {
+    // // var child = current.left;
+    // // RedBlackNode<AnyType> succ = child.findMin(nullNode);
+    // // var temp = succ.element;
+    // // succ.element = current.element;
+    // // current.element = temp;
+    // // remove(toRemove);
+    // // }
+    //
+    // }
+    public void remove(AnyType x) {
+        if (!contains(x))
+            return;
+        System.out.println("\n=== Removing " + x + " ===");
+        System.out.println("Initial tree:");
+        printTreeWithColor();
+
+        if (header.right == nullNode)
+            return;
+
+        RedBlackNode<AnyType> current = header.right;
+        RedBlackNode<AnyType> parent = header;
+        RedBlackNode<AnyType> grand = nullNode;
+        RedBlackNode<AnyType> great = nullNode;
+        RedBlackNode<AnyType> found = nullNode;
+
+        int dir = 1; // direction from parent to current (1 = right, 0 = left)
+        int last = 1; // previous direction
+
+        while (current != nullNode) {
+            // Save ancestors before moving down
+            great = grand;
+            grand = parent;
+            parent = current;
+            last = dir;
+            dir = compare(x, current) < 0 ? 0 : 1;
+
+            System.out.println(
+                    "\n--- At node " + current.element + " (color " + (current.color == RED ? "R" : "B") + ") ---");
+            System.out.println("Going " + (dir == 0 ? "LEFT" : "RIGHT"));
+
+            if (compare(x, current) == 0) {
+                found = current;
+                System.out.println(">>> Found target node (will be replaced later)");
+            }
+
+            // Top‑down fix: if current is black and the child we will go to is black
+            if (current.color == BLACK && getChild(current, dir).color == BLACK) {
+                RedBlackNode<AnyType> sibling = getChild(grand, 1 - last);
+
+                System.out.println("Fixing: current is black and next child is black. Sibling = " +
+                        nodeToString(sibling));
+                if (getChild(current, 1 - dir).color == RED) {
+                    // Rotate current with its red child to make current red
+                    RedBlackNode<AnyType> r = rotate(current, 1 - dir);
+                    r.color = BLACK; // absorbs current's black contribution
+                    current.color = RED;
+                    setChild(grand, last, r); // update grand's pointer to new subtree root
+                    grand = r;
+                    // current is now RED — no sibling-based fix needed, skip Cases 1/2/3
+                } else if (sibling.color == RED) {
+                    RedBlackNode<AnyType> r = rotate(grand, 1 - last);
+                    setChild(great, (great.right == grand) ? 1 : 0, r);
+
+                    r.color = grand.color; // ← was: r.color = BLACK (wrong when grand is RED)
+                    grand.color = RED;
+
+                    great = r; // update great so Case 3 below uses the correct parent
+                    sibling = getChild(grand, 1 - last);
+                }
+                // Cases 2 & 3 always run after Case 1 (no else)
+                else if (sibling != nullNode) {
+                    if (sibling.left.color == BLACK && sibling.right.color == BLACK) {
+                        // Case 2: colour flip
+                        grand.color = BLACK;
+                        sibling.color = RED;
+                        current.color = RED;
+                    } else {
+                        // Case 3: sibling has a red child
+                        int dir2 = (great.right == grand) ? 1 : 0;
+                        if (getChild(sibling, 1 - last).color == RED) {
+                            RedBlackNode<AnyType> r = rotate(grand, 1 - last);
+                            setChild(great, dir2, r);
+                            r.color = grand.color; // already correct in your Case 3
+                            r.left.color = BLACK;
+                            r.right.color = BLACK;
+                        } else {
+                            setChild(grand, 1 - last, rotate(sibling, last));
+                            RedBlackNode<AnyType> r = rotate(grand, 1 - last);
+                            setChild(great, dir2, r);
+                            r.color = grand.color;
+                            r.left.color = BLACK;
+                            r.right.color = BLACK;
+                        }
+                        current.color = RED;
+                    }
+                }
+            } else {
+                System.out.println("No fix needed.");
+            }
+
+            // Move to the next node
+            current = getChild(current, dir);
+        }
+
+        // Physical removal
+        if (found != nullNode) {
+            System.out.println("\n--- Physical removal ---");
+            System.out.println("Bottom node to splice out: " + parent.element);
+            found.element = parent.element; // copy data from bottom node
+            RedBlackNode<AnyType> child = (parent.left != nullNode) ? parent.left : parent.right;
+            setChild(grand, (grand.right == parent) ? 1 : 0, child);
+            System.out.println("Tree after splicing:");
+            printTreeWithColor();
+        } else {
+            System.out.println("Element not found, nothing removed.");
+        }
+
+        // Ensure root is black
+        if (header.right != nullNode) {
+            header.right.color = BLACK;
+        }
+
+        System.out.println("Final tree after remove:");
+        printTreeWithColor();
+
+        // Validate red‑black properties
+        try {
+            validateRedBlackTree();
+            System.out.println("Validation PASSED.");
+        } catch (Exception e) {
+            System.err.println("Validation FAILED: " + e.getMessage());
+        }
+    }
+
+    // Helper to safely print node element
+    private String nodeToString(RedBlackNode<AnyType> node) {
+        return node == nullNode ? "nullNode" : String.valueOf(node.element);
+    }
+
+    // Helper for rotation logic
+    private RedBlackNode<AnyType> getChild(RedBlackNode<AnyType> node, int dir) {
+        return (dir == 0) ? node.left : node.right;
+    }
+
+    private void setChild(RedBlackNode<AnyType> node, int dir, RedBlackNode<AnyType> child) {
+        if (dir == 0)
+            node.left = child;
+        else
+            node.right = child;
+    }
+
+    /**
+     * A generic BST rotation.
+     * 
+     * @param t   The node to be rotated.
+     * @param dir The direction of the child that will become the new root (0=left,
+     *            1=right).
+     */
+    private RedBlackNode<AnyType> rotate(RedBlackNode<AnyType> t, int dir) {
+        if (dir == 0) { // Rotate with left child
+            RedBlackNode<AnyType> k = t.left;
+            t.left = k.right;
+            k.right = t;
+            return k;
+        } else { // Rotate with right child
+            RedBlackNode<AnyType> k = t.right;
+            t.right = k.left;
+            k.left = t;
+            return k;
+        }
+    }
+
+    private void printTreeWithColor() {
+        RedBlackNode<AnyType> root = header.right;
+        if (root == nullNode) {
+            System.out.println("[empty tree]");
+            return;
+        }
+        System.out.println("-----TREE START-----");
+        printTree(root, "", true);
+        System.out.println("-----TREE END-----");
+    }
+
+    private void printTree(RedBlackNode<AnyType> node, String prefix, boolean isRight) {
+        if (node == nullNode)
+            return;
+
+        // Print right subtree first (so tree reads left=bottom, right=top)
+        printTree(node.right, prefix + (isRight ? "    " : "|   "), true);
+
+        // Print current node
+        String connector = isRight ? "┌── " : "└── ";
+        String color = node.color == RED ? "(R)" : "(B)";
+        System.out.println(prefix + connector + node.element + color);
+
+        // Print left subtree
+        printTree(node.left, prefix + (isRight ? "|   " : "    "), false);
+    }
+
+    private boolean bothChildrenBlack(RedBlackNode<AnyType> node) {
+        return node.left.color == BLACK && node.right.color == BLACK;
+    }
+
+    private void flipColor(RedBlackNode<AnyType> node) {
+        if (node == nullNode)
+            return;
+        node.color = node.color == RED ? BLACK : RED;
+    }
+
+    private void validateRedBlackTree() {
+        StackTraceElement caller = Thread.currentThread().getStackTrace()[2]; // [2] = whoever called this method
+        printTreeWithColor();
+        try {
+            Object header = this.header;
+            Object root = getRight(header);
+            int expectedBlackNodes = countExpectedBlackNodes(root, nullNode);
+            validateRedBlackTree(expectedBlackNodes, 0, BLACK, root, nullNode);
+        } catch (Exception e) {
+            System.err.println("Called from " + caller.getMethodName() + "() line " + caller.getLineNumber() + ": "
+                    + e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private void validateRedBlackTree(int expectedBlackNodes, int actualBlackNodes, int parentColor, Object node,
+            Object nullNode) throws NoSuchFieldException, IllegalAccessException {
+        if (node == nullNode) {
+            if (actualBlackNodes != expectedBlackNodes) {
+                throw new RuntimeException("Wrong number of black nodes in path: expected "
+                        + expectedBlackNodes + " but got " + actualBlackNodes);
+            }
+        } else {
+            int color = getColor(node);
+            switch (color) {
+                case BLACK:
+                    actualBlackNodes++;
+                    break;
+                case RED:
+                    if (parentColor != BLACK) {
+                        throw new RuntimeException("Red node has a red parent — two consecutive red nodes");
+                    }
+                    break;
+                default:
+                    throw new RuntimeException("Unexpected color: " + color);
+            }
+            validateRedBlackTree(expectedBlackNodes, actualBlackNodes, color, getLeft(node), nullNode);
+            validateRedBlackTree(expectedBlackNodes, actualBlackNodes, color, getRight(node), nullNode);
+        }
+    }
+
+    private int getColor(Object node)
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field field = node.getClass().getDeclaredField("color");
+        field.setAccessible(true);
+        return field.getInt(node);
+    }
+
+    private Object getLeft(Object node)
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field field = node.getClass().getDeclaredField("left");
+        field.setAccessible(true);
+        return field.get(node);
+    }
+
+    private Object getRight(Object node)
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field field = node.getClass().getDeclaredField("right");
+        field.setAccessible(true);
+        return field.get(node);
+    }
+
+    private int countExpectedBlackNodes(Object root, Object nullNode)
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        int count = 0;
+        Object node = root;
+        while (node != nullNode) {
+            if (getColor(node) == BLACK)
+                count++;
+            node = getLeft(node);
+        }
+        return count;
+    }
+
+    /**
+     * Find the smallest item the tree.
+     * 
+     * @return the smallest item or throw UnderflowExcepton if empty.
+     */
+    public AnyType findMin() {
+        if (isEmpty())
+            throw new UnderflowException();
+
+        RedBlackNode<AnyType> itr = header.right;
+
+        while (itr.left != nullNode)
+            itr = itr.left;
+
+        return itr.element;
+    }
+
+    /**
+     * Find the largest item in the tree.
+     * 
+     * @return the largest item or throw UnderflowExcepton if empty.
+     */
+    public AnyType findMax() {
+        if (isEmpty())
+            throw new UnderflowException();
+
+        RedBlackNode<AnyType> itr = header.right;
+
+        while (itr.right != nullNode)
+            itr = itr.right;
+
+        return itr.element;
+    }
+
+    /**
+     * Find an item in the tree.
+     * 
+     * @param x the item to search for.
+     * @return true if x is found; otherwise false.
+     */
+    public boolean contains(AnyType x) {
+        nullNode.element = x;
+        current = header.right;
+
+        for (;;) {
+            if (x.compareTo(current.element) < 0)
+                current = current.left;
+            else if (x.compareTo(current.element) > 0)
+                current = current.right;
+            else
+                return current != nullNode;
+        }
+    }
+
+    /**
+     * Make the tree logically empty.
+     */
+    public void makeEmpty() {
+        header.right = nullNode;
+    }
+
+    /**
+     * Print the tree contents in sorted order.
+     */
+    public void printTree() {
+        if (isEmpty())
+            System.out.println("Empty tree");
+        else
+            printTree(header.right);
+    }
+
+    /**
+     * Test if the tree is logically empty.
+     * 
+     * @return true if empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        return header.right == nullNode;
+    }
+
+    /**
+     * Compare item and t.element, using compareTo, with caveat that if t is header,
+     * then item is always larger. This routine is called if is possible that t is
+     * header. If it is not possible for t to be header, use compareTo directly.
+     */
+    private int compare(AnyType item, RedBlackNode<AnyType> t) {
+        if (t == header)
+            return 1;
+        else
+            return item.compareTo(t.element);
+    }
+
+    private void remove(RedBlackTree<AnyType> newTree, RedBlackNode<AnyType> node, AnyType x) {
+        if (node != nullNode) {
+            if (!node.element.equals(x)) {
+                newTree.insert(node.element);
+            }
+            remove(newTree, node.left, x);
+            remove(newTree, node.right, x);
+        }
+    }
+
+    /**
+     * Internal method to print a subtree in sorted order.
+     * 
+     * @param t the node that roots the subtree.
+     */
+    private void printTree(RedBlackNode<AnyType> t) {
+        if (t != nullNode) {
+            printTree(t.left);
+            System.out.println(t.element);
+            printTree(t.right);
+        }
+    }
+
+    /**
+     * Internal routine that is called during an insertion if a node has two red
+     * children. Performs flip and rotations.
+     * 
+     * @param item the item being inserted.
+     */
+    private void handleReorient(AnyType item) {
+        // Do the color flip
+        current.color = RED;
+        current.left.color = BLACK;
+        current.right.color = BLACK;
+
+        if (parent.color == RED) // Have to rotate
+        {
+            grand.color = RED;
+            if ((compare(item, grand) < 0) != (compare(item, parent) < 0))
+                parent = rotate(item, grand); // Start dbl rotate
+            current = rotate(item, great);
+            current.color = BLACK;
+        }
+        header.right.color = BLACK; // Make root black
+    }
+
+    /**
+     * Internal routine that performs a single or double rotation. Because the
+     * result is attached to the parent, there are four cases. Called by
+     * handleReorient.
+     * 
+     * @param item   the item in handleReorient.
+     * @param parent the parent of the root of the rotated subtree.
+     * @return the root of the rotated subtree.
+     */
+    private RedBlackNode<AnyType> rotate(AnyType item, RedBlackNode<AnyType> parent) {
+        if (compare(item, parent) < 0)
+            return parent.left = compare(item, parent.left) < 0 ? rotateWithLeftChild(parent.left) : // LL
+                    rotateWithRightChild(parent.left); // LR
+        else
+            return parent.right = compare(item, parent.right) < 0 ? rotateWithLeftChild(parent.right) : // RL
+                    rotateWithRightChild(parent.right); // RR
+    }
+
+    /**
+     * Rotate binary tree node with left child.
+     */
+    private RedBlackNode<AnyType> rotateWithLeftChild(RedBlackNode<AnyType> node) {
+        RedBlackNode<AnyType> leftChild = node.left;
+        node.left = leftChild.right;
+        leftChild.right = node;
+        return leftChild;
+    }
+
+    /**
+     * Rotate binary tree node with right child.
+     */
+    private RedBlackNode<AnyType> rotateWithRightChild(RedBlackNode<AnyType> node) {
+        RedBlackNode<AnyType> rightChild = node.right;
+        node.right = rightChild.left;
+        rightChild.left = node;
+        return rightChild;
+    }
+
+}

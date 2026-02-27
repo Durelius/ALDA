@@ -1,7 +1,5 @@
 package alda.t9.redblack;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,6 +12,10 @@ public class AppTest {
      */
     @Test
     public void shouldAnswerWithTrue() {
-        assertTrue(true);
+        RedBlackTree<Integer> tree = new RedBlackTree<>();
+        for (int i = 1; i <= 10; i++) {
+            tree.insert(i);
+        }
+        tree.remove(3);
     }
 }
