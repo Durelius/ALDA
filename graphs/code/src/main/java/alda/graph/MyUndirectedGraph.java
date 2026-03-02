@@ -1,3 +1,4 @@
+//Wilhelm Durelius widu7139
 package alda.graph;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ class MyUndirectedGraph<T> implements UndirectedGraph<T> {
         private T data;
         private ArrayList<Edge<T>> edges;
 
-        public Node(T data) {
+        Node(T data) {
             this.data = data;
             this.edges = new ArrayList<>();
         }
@@ -45,8 +46,8 @@ class MyUndirectedGraph<T> implements UndirectedGraph<T> {
     }
 
     private static class Edge<T> {
-        public final Node<T> from;
-        public final Node<T> to;
+        private Node<T> from;
+        private Node<T> to;
         private int cost;
 
         Edge(int cost, Node<T> from, Node<T> to) {
@@ -88,52 +89,52 @@ class MyUndirectedGraph<T> implements UndirectedGraph<T> {
     }
 
     @Override
-    public boolean connect(T data1, T data2, int cost) {
+    public boolean connect(T first, T second, int cost) {
         if (cost <= 0)
             return false;
-        Node<T> node1 = nodes.get(data1);
-        Node<T> node2 = nodes.get(data2);
-        if (node1 == null || node2 == null)
+        Node<T> firstNode = nodes.get(first);
+        Node<T> secondNode = nodes.get(second);
+        if (firstNode == null || secondNode == null)
             return false;
 
-        Edge<T> existing1 = node1.edges.stream()
-                .filter(e -> e.to.equals(node2))
+        Edge<T> firstExist = firstNode.edges.stream()
+                .filter(e -> e.to.equals(secondNode))
                 .findFirst()
                 .orElse(null);
 
-        Edge<T> existing2 = node2.edges.stream()
-                .filter(e -> e.to.equals(node1))
+        Edge<T> secondExist = secondNode.edges.stream()
+                .filter(e -> e.to.equals(firstNode))
                 .findFirst()
                 .orElse(null);
 
-        if (existing1 != null && existing2 != null) {
-            existing1.cost = cost;
-            existing2.cost = cost;
+        if (firstExist != null && secondExist != null) {
+            firstExist.cost = cost;
+            secondExist.cost = cost;
             return true;
         }
 
-        var edge1 = new Edge<T>(cost, node1, node2);
-        var edge2 = new Edge<T>(cost, node2, node1);
-        node1.edges.add(edge1);
-        node2.edges.add(edge2);
+        var firstEdge = new Edge<T>(cost, firstNode, secondNode);
+        var secondEdge = new Edge<T>(cost, secondNode, firstNode);
+        firstNode.edges.add(firstEdge);
+        secondNode.edges.add(secondEdge);
         return true;
 
     }
 
     @Override
-    public boolean isConnected(T node1, T node2) {
-        var path = depthFirstSearch(node1, node2);
+    public boolean isConnected(T first, T second) {
+        var path = depthFirstSearch(first, second);
         return path != null && path.size() > 0;
     }
 
     @Override
-    public int getCost(T node1, T node2) {
-        Node<T> n1 = nodes.get(node1);
-        Node<T> n2 = nodes.get(node2);
-        if (n1 == null || n2 == null)
+    public int getCost(T first, T second) {
+        Node<T> firstNode = nodes.get(first);
+        Node<T> secondNode = nodes.get(second);
+        if (firstNode == null || secondNode == null)
             return -1;
-        for (Edge<T> edge : n1.edges) {
-            if (edge.to.equals(n2)) {
+        for (Edge<T> edge : firstNode.edges) {
+            if (edge.to.equals(secondNode)) {
                 return edge.getCost();
             }
         }
