@@ -1,35 +1,39 @@
 package alda.t9;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class HuffmanCoder {
 
     private static class Node implements Comparable<Node> {
+
+        private int frequency;
+        private Node left;
+        private Node right;
+        private final char character;
+
         Node(char character, int frequency) {
             this.frequency = frequency;
             this.character = character;
         }
 
         Node(int frequency) {
-            this.character = null;
+            this.character = Character.MAX_VALUE;
             this.frequency = frequency;
         }
 
-        public void IncFrequency() {
+        public void incFrequency() {
             frequency++;
         }
 
         @Override
         public int compareTo(Node other) {
-            if (this.character == null && other.character != null)
+            if (this.character == Character.MAX_VALUE && other.character != Character.MAX_VALUE)
                 return 1;
-            if (this.character != null && other.character == null)
+            if (this.character != Character.MAX_VALUE && other.character == Character.MAX_VALUE)
                 return -1;
-            if (this.character != null && other.character != null) {
+            if (this.character != Character.MAX_VALUE && other.character != Character.MAX_VALUE) {
                 int cmp = Character.compare(this.character, other.character);
                 if (cmp != 0)
                     return cmp;
@@ -54,10 +58,6 @@ public class HuffmanCoder {
             return Objects.hash(character, frequency);
         }
 
-        private int frequency;
-        private final Character character;
-        private Node left;
-        private Node right;
     }
 
     public EncodedMessage<?, ?> encode(String msg) {
@@ -71,7 +71,7 @@ public class HuffmanCoder {
             var character = msg.charAt(i);
             var node = map.get(character);
             if (node != null)
-                node.IncFrequency();
+                node.incFrequency();
             else
                 map.put(character, new Node(character, 1));
         }
@@ -93,6 +93,21 @@ public class HuffmanCoder {
         String encodedMsg = encode(headerMap, msg);
 
         return new EncodedMessage<Node, String>(root, encodedMsg);
+    }
+
+    private String encode(HashMap<Character, String> headerMap, String raw) {
+        StringBuilder encoded = new StringBuilder();
+        for (int i = 0; i < raw.length(); i++) {
+            encoded.append(headerMap.get(raw.charAt(i)));
+        }
+        return encoded.toString();
+    }
+
+    public String decode(EncodedMessage<?, ?> msg) {
+        var header = (Node) msg.header;
+        String message = (String) msg.message;
+
+        return decodeTree(header, message);
     }
 
     private void fillHeaderMap(Node root, HashMap<Character, String> headerMap, String curr) {
@@ -128,7 +143,7 @@ public class HuffmanCoder {
     // decodeTree(root, curr == '0' ? node.left : node.right, encoded, decoded);
     // }
     //
-    
+
     private String decodeTree(Node root, String encoded) {
         StringBuilder decoded = new StringBuilder();
         Node current = root;
@@ -144,18 +159,4 @@ public class HuffmanCoder {
         return decoded.toString();
     }
 
-    private String encode(HashMap<Character, String> headerMap, String raw) {
-        StringBuilder encoded = new StringBuilder();
-        for (int i = 0; i < raw.length(); i++) {
-            encoded.append(headerMap.get(raw.charAt(i)));
-        }
-        return encoded.toString();
-    }
-
-    public String decode(EncodedMessage<?, ?> msg) {
-        var header = (Node) msg.header;
-        String message = (String) msg.message;
-
-        return decodeTree(header, message);
-    }
 }
