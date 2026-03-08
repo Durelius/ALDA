@@ -14,6 +14,10 @@ func TestAIVersesRandom(t *testing.T) {
 	gs := gamestate.New()
 	maxMoves := 500
 	moves := 0
+	coordinate := gamestate.RandomBoardCoordinate()
+	_ = gs.Board.Place(coordinate, board.BLACK)
+	gs.FlipTurn()
+	lastRandomPlay := coordinate
 gameLoop:
 	for moves < maxMoves {
 		if gs.PlayerTurn {
@@ -23,7 +27,9 @@ gameLoop:
 				t.Error("Random did 100 placings but failed to find an empty spot")
 				break gameLoop
 			}
-			coordinate := gamestate.RandomBoardCoordinate()
+			coordinate = gamestate.NextRandomConnectedCoordinate(lastRandomPlay)
+			lastRandomPlay = coordinate
+
 			//player always starts and is always black
 			if err := gs.Board.Place(coordinate, board.BLACK); err != nil {
 				randomCount++
@@ -33,6 +39,7 @@ gameLoop:
 			moves++
 			if gs.WinTurn() {
 				t.Error("Random won")
+				gs.PrintBoard()
 				break gameLoop
 			}
 			gs.FlipTurn()
@@ -53,11 +60,142 @@ gameLoop:
 			moves++
 			if gs.WinTurn() {
 				gs.PrintBoard()
-				log.Println("computer won!")
+				log.Println("AI won!")
 				break gameLoop
 			}
 			gs.FlipTurn()
 
+		}
+	}
+}
+func TestAIVSHorizontal(t *testing.T) {
+	gs := gamestate.New()
+	maxMoves := 500
+	moves := 0
+	col := 0
+
+gameLoop:
+	for moves < maxMoves {
+		if gs.PlayerTurn {
+		playerTurn:
+			coordinate := board.Coordinate{Row: 0, Column: col}
+			col++
+			if err := gs.Board.Place(coordinate, board.BLACK); err != nil {
+				if col >= board.SIZE {
+					t.Error("Ran out of horizontal columns")
+					break gameLoop
+				}
+				goto playerTurn
+			}
+			moves++
+			if gs.WinTurn() {
+				t.Error("Horizontal player won")
+				gs.PrintBoard()
+				break gameLoop
+			}
+			gs.FlipTurn()
+		} else {
+			coordinate, noPlays := gs.Board.NextMove()
+			if noPlays {
+				t.Error("No moves left, draw")
+				break gameLoop
+			}
+			if err := gs.Board.Place(coordinate, board.WHITE); err != nil {
+				t.Errorf("Computer placing failed: %v", err)
+			}
+			moves++
+			if gs.WinTurn() {
+				break gameLoop
+			}
+			gs.FlipTurn()
+		}
+	}
+}
+
+func TestAIVSVertical(t *testing.T) {
+	gs := gamestate.New()
+	maxMoves := 500
+	moves := 0
+	row := 0
+
+gameLoop:
+	for moves < maxMoves {
+		if gs.PlayerTurn {
+		playerTurn:
+			coordinate := board.Coordinate{Row: row, Column: 0}
+			row++
+			if err := gs.Board.Place(coordinate, board.BLACK); err != nil {
+				if row >= board.SIZE {
+					t.Error("Ran out of vertical rows")
+					break gameLoop
+				}
+				goto playerTurn
+			}
+			moves++
+			if gs.WinTurn() {
+				t.Error("Vertical player won")
+				gs.PrintBoard()
+				break gameLoop
+			}
+			gs.FlipTurn()
+		} else {
+			coordinate, noPlays := gs.Board.NextMove()
+			if noPlays {
+				t.Error("No moves left, draw")
+				break gameLoop
+			}
+			if err := gs.Board.Place(coordinate, board.WHITE); err != nil {
+				t.Errorf("Computer placing failed: %v", err)
+			}
+			moves++
+			if gs.WinTurn() {
+				break gameLoop
+			}
+			gs.FlipTurn()
+		}
+	}
+}
+
+func TestAIVSDiagonal(t *testing.T) {
+	gs := gamestate.New()
+	maxMoves := 500
+	moves := 0
+	step := 0
+
+gameLoop:
+	for moves < maxMoves {
+		if gs.PlayerTurn {
+		playerTurn:
+			coordinate := board.Coordinate{Row: step, Column: step}
+			step++
+			if err := gs.Board.Place(coordinate, board.BLACK); err != nil {
+				if step >= board.SIZE {
+					t.Error("Ran out of diagonal steps")
+					break gameLoop
+				}
+				goto playerTurn
+			}
+			moves++
+			if gs.WinTurn() {
+				t.Error("Diagonal player won")
+				gs.PrintBoard()
+				break gameLoop
+			}
+			gs.FlipTurn()
+		} else {
+			coordinate, noPlays := gs.Board.NextMove()
+			if noPlays {
+				t.Error("No moves left, draw")
+				break gameLoop
+			}
+			if err := gs.Board.Place(coordinate, board.WHITE); err != nil {
+				t.Errorf("Computer placing failed: %v", err)
+			}
+			moves++
+			if gs.WinTurn() {
+				break gameLoop
+			}
+			gs.FlipTurn()
 		}
 	}
 }

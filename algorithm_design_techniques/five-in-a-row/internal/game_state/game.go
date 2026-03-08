@@ -18,7 +18,6 @@ type GameState struct {
 }
 
 func New() *GameState {
-	fmt.Println("Welcome to five in a row! Initial board below.")
 	return &GameState{Board: *board.New(), PlayerTurn: true}
 }
 
@@ -77,6 +76,35 @@ func (gs *GameState) FlipTurn() {
 func RandomBoardCoordinate() (coordinate board.Coordinate) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return board.Coordinate{Row: r.Intn(board.SIZE), Column: r.Intn(board.SIZE)}
+}
+func NextRandomConnectedCoordinate(prev board.Coordinate) board.Coordinate {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	// all 8 neighbors, shuffled
+	deltas := [][2]int{
+		{-1, -1}, {-1, 0}, {-1, 1},
+		{0, -1}, {0, 1},
+		{1, -1}, {1, 0}, {1, 1},
+	}
+	r.Shuffle(len(deltas), func(i, j int) {
+		deltas[i], deltas[j] = deltas[j], deltas[i]
+	})
+
+	for _, d := range deltas {
+		candidate := board.Coordinate{
+			Row:    prev.Row + d[0],
+			Column: prev.Column + d[1],
+		}
+		if candidate.Row >= 0 && candidate.Row < board.SIZE &&
+			candidate.Column >= 0 && candidate.Column < board.SIZE {
+			if err := candidate.Validate(); err == nil {
+				return candidate
+			}
+		}
+	}
+
+	// fallback: We are entirely surrounded and can't go anywhere, return new coordinate
+	return RandomBoardCoordinate()
 }
 
 func readMove() (board.Coordinate, error) {

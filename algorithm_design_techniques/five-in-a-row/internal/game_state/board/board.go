@@ -26,6 +26,10 @@ type Coordinate struct {
 	Row    int
 	Column int
 }
+type ScoreCoordinate struct {
+	Coordinate
+	Score int
+}
 
 func New() *Board {
 	return &Board{}
