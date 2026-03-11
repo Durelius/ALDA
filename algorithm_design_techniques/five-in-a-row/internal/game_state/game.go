@@ -13,12 +13,12 @@ import (
 )
 
 type GameState struct {
-	Board      board.Board
-	PlayerTurn bool
+	Board     board.Board
+	BlackTurn bool
 }
 
 func New() *GameState {
-	return &GameState{Board: *board.New(), PlayerTurn: true}
+	return &GameState{Board: *board.New(), BlackTurn: true}
 }
 
 func (gs *GameState) PrintBoard() {
@@ -26,7 +26,7 @@ func (gs *GameState) PrintBoard() {
 }
 func (gs *GameState) GameLoop() {
 	for {
-		if gs.PlayerTurn {
+		if gs.BlackTurn {
 		playerTurn:
 			coordinate, err := readMove()
 			//player always starts and is always black
@@ -38,7 +38,7 @@ func (gs *GameState) GameLoop() {
 				goto playerTurn
 			}
 			gs.Board.PrintPlay(coordinate, board.BLACK)
-			if gs.WinTurn() {
+			if gs.WinTurn(board.BLACK) {
 				gs.PrintBoard()
 				fmt.Println("player won!")
 				break
@@ -46,7 +46,7 @@ func (gs *GameState) GameLoop() {
 			gs.FlipTurn()
 		} else {
 		computerTurn:
-			coordinate, noPlays := gs.Board.NextMove()
+			coordinate, noPlays := gs.Board.NextMove(board.WHITE)
 			if noPlays {
 				fmt.Println("No moves next to play, quitting. We'll call it a draw")
 				break
@@ -56,7 +56,7 @@ func (gs *GameState) GameLoop() {
 				goto computerTurn
 			}
 			gs.Board.PrintPlay(coordinate, board.WHITE)
-			if gs.WinTurn() {
+			if gs.WinTurn(board.WHITE) {
 				fmt.Println("computer won!")
 				break
 			}
@@ -66,12 +66,12 @@ func (gs *GameState) GameLoop() {
 		gs.Board.Print()
 	}
 }
-func (gs *GameState) WinTurn() bool {
-	score := gs.Board.GetScore()
-	return score == board.WIN_SCORE || -score == board.WIN_SCORE
+func (gs *GameState) WinTurn(color board.Color) bool {
+	score := gs.Board.GetScore(color)
+	return score >= board.WIN_SCORE || score <= -board.WIN_SCORE
 }
 func (gs *GameState) FlipTurn() {
-	gs.PlayerTurn = !gs.PlayerTurn
+	gs.BlackTurn = !gs.BlackTurn
 }
 func RandomBoardCoordinate() (coordinate board.Coordinate) {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))

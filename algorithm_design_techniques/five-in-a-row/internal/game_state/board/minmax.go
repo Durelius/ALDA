@@ -14,11 +14,12 @@ const (
 	TIE            = 0
 )
 const DEPTH_LEVEL = 5
+const MAX_PLAYS = 10
 
-func (b *Board) NextMove() (bestCoordinate Coordinate, noMovesLeft bool) {
+func (b *Board) NextMove(color Color) (bestCoordinate Coordinate, noMovesLeft bool) {
 
 	bestScoreCoordinate := ScoreCoordinate{Score: math.MinInt}
-	possiblePlays := b.getSortedPossibleScorePlays(WHITE)
+	possiblePlays := b.getSortedPossibleScorePlays(color)
 	if len(possiblePlays) == 0 {
 		return bestCoordinate, true
 	}
@@ -28,11 +29,11 @@ func (b *Board) NextMove() (bestCoordinate Coordinate, noMovesLeft bool) {
 	for _, coord := range possiblePlays {
 		newBoard := b.copy()
 
-		if err := newBoard.Place(coord.Coordinate, WHITE); err != nil {
+		if err := newBoard.Place(coord.Coordinate, color); err != nil {
 			log.Println(err)
 			continue
 		}
-		score := newBoard.minMax(DEPTH_LEVEL, math.MinInt, math.MaxInt, false)
+		score := newBoard.minMax(DEPTH_LEVEL, math.MinInt, math.MaxInt, false, color)
 		if score > bestScoreCoordinate.Score {
 			bestScoreCoordinate = ScoreCoordinate{coord.Coordinate, score}
 		}
@@ -43,25 +44,30 @@ func (b *Board) NextMove() (bestCoordinate Coordinate, noMovesLeft bool) {
 
 	return bestScoreCoordinate.Coordinate, false
 }
+func oppColor(color Color) Color {
+	if color == WHITE {
+		return BLACK
+	}
+	return WHITE
+}
 
 // minMax returns the score of the best path down the tree
-func (b *Board) minMax(depth, alpha, beta int, isMax bool) int {
+func (b *Board) minMax(depth, alpha, beta int, isMax bool, maxColor Color) int {
 	if depth == 0 {
-		return b.GetScore() // base case – score the position
+		return b.GetScore(maxColor)
 	}
 
 	if isMax {
 		best := math.MinInt
-		for _, coord := range b.getSortedPossibleScorePlays(WHITE) {
+		plays := b.getSortedPossibleScorePlays(maxColor)
+		for _, coord := range plays {
 			newBoard := b.copy()
-			if err := newBoard.Place(coord.Coordinate, WHITE); err != nil {
+			if err := newBoard.Place(coord.Coordinate, maxColor); err != nil {
 				log.Println(err)
 				continue
 			}
-			if coord.Score >= WIN_SCORE || coord.Score <= -WIN_SCORE {
-				return coord.Score
-			}
-			score := newBoard.minMax(depth-1, alpha, beta, false)
+			score := newBoard.minMax(depth-1, alpha, beta, false, maxColor)
+			// log.Printf("white score: %d", score)
 			best = max(best, score)
 			alpha = max(best, alpha)
 			if beta <= alpha { // prune
@@ -71,16 +77,15 @@ func (b *Board) minMax(depth, alpha, beta int, isMax bool) int {
 		return best
 	} else {
 		best := math.MaxInt
-		for _, coord := range b.getSortedPossibleScorePlays(BLACK) {
+		plays := b.getSortedPossibleScorePlays(oppColor(maxColor))
+		for _, coord := range plays {
 			newBoard := b.copy()
-			if err := newBoard.Place(coord.Coordinate, BLACK); err != nil {
+			if err := newBoard.Place(coord.Coordinate, oppColor(maxColor)); err != nil {
 				log.Println(err)
 				continue
 			}
-			if coord.Score >= WIN_SCORE || coord.Score <= -WIN_SCORE {
-				return coord.Score
-			}
-			score := newBoard.minMax(depth-1, alpha, beta, true)
+			score := newBoard.minMax(depth-1, alpha, beta, true, maxColor)
+			// log.Printf("black score: %d", score)
 			best = min(best, score)
 			beta = min(best, beta)
 			if beta <= alpha { // prune
@@ -91,9 +96,9 @@ func (b *Board) minMax(depth, alpha, beta int, isMax bool) int {
 	}
 }
 
-func (b *Board) GetScore() int {
-	computerScore := 0
-	playerScore := 0
+func (b *Board) GetScore(maxColor Color) int {
+	maxScore := 0
+	minScore := 0
 
 	directions := []Coordinate{
 		{0, 1},  // horizontal
@@ -105,13 +110,16 @@ func (b *Board) GetScore() int {
 	for row := range SIZE {
 		for col := range SIZE {
 			for _, dir := range directions {
-				computerScore += scoreLine(b, row, col, dir, WHITE)
-				playerScore += scoreLine(b, row, col, dir, BLACK)
+				maxScore += scoreLine(b, row, col, dir, maxColor)
+				minScore += scoreLine(b, row, col, dir, oppColor(maxColor))
+				if maxScore >= WIN_SCORE || minScore >= WIN_SCORE {
+					return maxScore - minScore
+				}
 			}
 		}
 	}
 
-	return computerScore - playerScore
+	return maxScore - minScore
 }
 
 func (b *Board) won(score int) bool {
@@ -119,6 +127,10 @@ func (b *Board) won(score int) bool {
 }
 
 func scoreLine(b *Board, row, col int, dir Coordinate, color Color) int {
+	oppColor := BLACK
+	if color == BLACK {
+		oppColor = WHITE
+	}
 	count := 0
 	for i := range 5 {
 		r := row + dir.Row*i
@@ -126,10 +138,12 @@ func scoreLine(b *Board, row, col int, dir Coordinate, color Color) int {
 		if r < 0 || r >= SIZE || c < 0 || c >= SIZE {
 			return 0
 		}
-		if b.Grid[r][c] != color {
+		if b.Grid[r][c] == oppColor {
 			return 0
 		}
-		count++
+		if b.Grid[r][c] == color {
+			count++
+		}
 	}
 
 	switch count {
@@ -163,12 +177,12 @@ func (b *Board) getAllPlacedPositions() map[Coordinate]Color {
 // we bucket sort by scores, prioritizing our own score highest and then blocking the opponent
 func (b *Board) getSortedPossibleScorePlays(color Color) []ScoreCoordinate {
 	placedPositions := b.getAllPlacedPositions()
-	visited := make(map[Coordinate]struct{}) // ← separate set
-	buckets := make([][]ScoreCoordinate, 9)
+	visited := make(map[Coordinate]struct{})
+	buckets := make([][]ScoreCoordinate, 8)
 
 	for coord := range placedPositions {
-		for dy := -2; dy <= 2; dy++ {
-			for dx := -2; dx <= 2; dx++ {
+		for dy := -1; dy <= 1; dy++ {
+			for dx := -1; dx <= 1; dx++ {
 				if dy == 0 && dx == 0 {
 					continue
 				}
@@ -196,7 +210,7 @@ func (b *Board) getSortedPossibleScorePlays(color Color) []ScoreCoordinate {
 				scoreCoordinate := ScoreCoordinate{neighbor, score}
 				switch {
 				case myScore >= WIN_SCORE:
-					buckets[8] = append(buckets[8], scoreCoordinate)
+					return []ScoreCoordinate{scoreCoordinate}
 				case oppScore >= WIN_SCORE:
 					buckets[7] = append(buckets[7], scoreCoordinate)
 				case myScore >= IN_A_ROW_FOUR:
@@ -220,13 +234,16 @@ func (b *Board) getSortedPossibleScorePlays(color Color) []ScoreCoordinate {
 	result := []ScoreCoordinate{}
 	for i := len(buckets) - 1; i >= 0; i-- {
 		result = append(result, buckets[i]...)
+		if len(result) >= MAX_PLAYS {
+			return result[0:MAX_PLAYS]
+		}
 	}
 	return result
 }
 
 func (b *Board) copy() *Board {
 	newBoard := &Board{}
-	newBoard.Grid = b.Grid // in Go this copies the array by value!
+	newBoard.Grid = b.Grid // this copies the array by value, it is not a slice as size is constant
 	return newBoard
 }
 func (b *Board) countDirection(start Coordinate, dRow, dCol int, color Color) int {

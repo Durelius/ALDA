@@ -20,7 +20,7 @@ func TestAIVersesRandom(t *testing.T) {
 	lastRandomPlay := coordinate
 gameLoop:
 	for moves < maxMoves {
-		if gs.PlayerTurn {
+		if gs.BlackTurn {
 			randomCount := 0
 		playerTurn:
 			if randomCount > 100 {
@@ -37,7 +37,7 @@ gameLoop:
 				goto playerTurn
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.BLACK) {
 				t.Error("Random won")
 				gs.PrintBoard()
 				break gameLoop
@@ -46,19 +46,20 @@ gameLoop:
 		} else {
 			log.Println("computer thinking...")
 			start := time.Now()
-			coordinate, noPlays := gs.Board.NextMove()
+			coordinate, noPlays := gs.Board.NextMove(board.WHITE)
 			if noPlays {
 				t.Error("No moves next to play, quitting. We'll call it a draw")
 				break gameLoop
 			}
 			since := time.Since(start)
 			log.Printf("Computer finished thinking, took %v", since)
+			gs.PrintBoard()
 			//computer is always white
 			if err := gs.Board.Place(coordinate, board.WHITE); err != nil {
 				t.Errorf("Computer placing failed, %v", err)
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.WHITE) {
 				gs.PrintBoard()
 				log.Println("AI won!")
 				break gameLoop
@@ -76,7 +77,7 @@ func TestAIVSHorizontal(t *testing.T) {
 
 gameLoop:
 	for moves < maxMoves {
-		if gs.PlayerTurn {
+		if gs.BlackTurn {
 		playerTurn:
 			coordinate := board.Coordinate{Row: 0, Column: col}
 			col++
@@ -88,14 +89,14 @@ gameLoop:
 				goto playerTurn
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.BLACK) {
 				t.Error("Horizontal player won")
 				gs.PrintBoard()
 				break gameLoop
 			}
 			gs.FlipTurn()
 		} else {
-			coordinate, noPlays := gs.Board.NextMove()
+			coordinate, noPlays := gs.Board.NextMove(board.WHITE)
 			if noPlays {
 				t.Error("No moves left, draw")
 				break gameLoop
@@ -104,7 +105,7 @@ gameLoop:
 				t.Errorf("Computer placing failed: %v", err)
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.WHITE) {
 				break gameLoop
 			}
 			gs.FlipTurn()
@@ -120,7 +121,7 @@ func TestAIVSVertical(t *testing.T) {
 
 gameLoop:
 	for moves < maxMoves {
-		if gs.PlayerTurn {
+		if gs.BlackTurn {
 		playerTurn:
 			coordinate := board.Coordinate{Row: row, Column: 0}
 			row++
@@ -132,14 +133,14 @@ gameLoop:
 				goto playerTurn
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.BLACK) {
 				t.Error("Vertical player won")
 				gs.PrintBoard()
 				break gameLoop
 			}
 			gs.FlipTurn()
 		} else {
-			coordinate, noPlays := gs.Board.NextMove()
+			coordinate, noPlays := gs.Board.NextMove(board.WHITE)
 			if noPlays {
 				t.Error("No moves left, draw")
 				break gameLoop
@@ -148,7 +149,7 @@ gameLoop:
 				t.Errorf("Computer placing failed: %v", err)
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.WHITE) {
 				break gameLoop
 			}
 			gs.FlipTurn()
@@ -164,7 +165,7 @@ func TestAIVSDiagonal(t *testing.T) {
 
 gameLoop:
 	for moves < maxMoves {
-		if gs.PlayerTurn {
+		if gs.BlackTurn {
 		playerTurn:
 			coordinate := board.Coordinate{Row: step, Column: step}
 			step++
@@ -176,14 +177,14 @@ gameLoop:
 				goto playerTurn
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.BLACK) {
 				t.Error("Diagonal player won")
 				gs.PrintBoard()
 				break gameLoop
 			}
 			gs.FlipTurn()
 		} else {
-			coordinate, noPlays := gs.Board.NextMove()
+			coordinate, noPlays := gs.Board.NextMove(board.WHITE)
 			if noPlays {
 				t.Error("No moves left, draw")
 				break gameLoop
@@ -192,7 +193,7 @@ gameLoop:
 				t.Errorf("Computer placing failed: %v", err)
 			}
 			moves++
-			if gs.WinTurn() {
+			if gs.WinTurn(board.WHITE) {
 				break gameLoop
 			}
 			gs.FlipTurn()

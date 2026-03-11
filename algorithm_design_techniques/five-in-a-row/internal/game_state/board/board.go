@@ -86,9 +86,9 @@ func (b *Board) PrintPlay(coordinate Coordinate, brick Color) {
 
 	switch brick {
 	case BLACK:
-		whoPlaced = "Black (person)"
+		whoPlaced = "Black"
 	case WHITE:
-		whoPlaced = "White (computer)"
+		whoPlaced = "White"
 	default:
 		log.Fatal("Incorrect use of placing")
 	}
