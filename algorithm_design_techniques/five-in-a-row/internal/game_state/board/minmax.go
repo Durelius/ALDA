@@ -66,6 +66,10 @@ func (b *Board) minMax(depth, alpha, beta int, isMax bool, maxColor Color) int {
 				log.Println(err)
 				continue
 			}
+
+			if boardScore := newBoard.GetScore(maxColor); newBoard.won(boardScore) {
+				return boardScore
+			}
 			score := newBoard.minMax(depth-1, alpha, beta, false, maxColor)
 			// log.Printf("white score: %d", score)
 			best = max(best, score)
@@ -83,6 +87,9 @@ func (b *Board) minMax(depth, alpha, beta int, isMax bool, maxColor Color) int {
 			if err := newBoard.Place(coord.Coordinate, oppColor(maxColor)); err != nil {
 				log.Println(err)
 				continue
+			}
+			if boardScore := newBoard.GetScore(maxColor); newBoard.won(boardScore) {
+				return boardScore
 			}
 			score := newBoard.minMax(depth-1, alpha, beta, true, maxColor)
 			// log.Printf("black score: %d", score)
@@ -112,8 +119,11 @@ func (b *Board) GetScore(maxColor Color) int {
 			for _, dir := range directions {
 				maxScore += scoreLine(b, row, col, dir, maxColor)
 				minScore += scoreLine(b, row, col, dir, oppColor(maxColor))
-				if maxScore >= WIN_SCORE || minScore >= WIN_SCORE {
-					return maxScore - minScore
+				if maxScore >= WIN_SCORE {
+					return WIN_SCORE
+				}
+				if minScore >= WIN_SCORE {
+					return -WIN_SCORE
 				}
 			}
 		}

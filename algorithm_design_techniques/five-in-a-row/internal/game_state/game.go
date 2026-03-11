@@ -58,6 +58,7 @@ func (gs *GameState) GameLoop() {
 			gs.Board.PrintPlay(coordinate, board.WHITE)
 			if gs.WinTurn(board.WHITE) {
 				fmt.Println("computer won!")
+				gs.PrintBoard()
 				break
 			}
 			gs.FlipTurn()
